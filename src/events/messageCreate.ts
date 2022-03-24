@@ -1,5 +1,3 @@
-import { MessageAttachment } from "discord.js";
-import { client } from "..";
 import { Event } from "../structures/Events";
 
 const badWords = [
@@ -30,5 +28,6 @@ export default new Event('messageCreate', async (message) => {
         message.delete().catch(() => { });
 
         const reply = await channel.send(imgUrl);
+        setTimeout(() => reply.delete(), 5000);
     }
 })
