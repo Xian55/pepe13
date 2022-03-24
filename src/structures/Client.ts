@@ -23,15 +23,12 @@ export class ExtendedClient extends Client {
         return (await import(filePath))?.default;
     }
 
-    async registerCommands({commands, guildId}: RegisterCommandsOptions)
-    {
-        if (guildId)
-        {
+    async registerCommands({ commands, guildId }: RegisterCommandsOptions) {
+        if (guildId) {
             this.guilds.cache.get(guildId)?.commands.set(commands);
             console.log(`Registering commands to ${guildId}`);
         }
-        else
-        {
+        else {
             this.application.commands.set(commands);
             console.log(`Registering global commands`);
         }
@@ -44,7 +41,7 @@ export class ExtendedClient extends Client {
 
         commandFiles.forEach(async filePath => {
             const command: CommandType = await this.importFile(filePath);
-            if(!command.name) return;
+            if (!command.name) return;
             console.log(command);
 
             this.commands.set(command.name, command);

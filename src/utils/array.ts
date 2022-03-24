@@ -1,4 +1,4 @@
-export {}
+export { }
 
 declare global {
     interface Array<T> {
@@ -7,7 +7,7 @@ declare global {
 }
 
 if (!Array.prototype.sample) {
-    Array.prototype.sample = function<T>() {
+    Array.prototype.sample = function <T>() {
         return this[Math.floor(Math.random() * this.length)] as T;
     };
 }
