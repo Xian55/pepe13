@@ -4,9 +4,10 @@ declare global {
             botToken: string;
             API_KEY_IMGUR: string;
             guildId: string;
+            MONGO_URI: string;
             environment: "dev" | "prod" | "debug";
         }
     }
 }
 
-export {};
+export { };
