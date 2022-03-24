@@ -5,19 +5,22 @@ import { promisify } from "util";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Events";
 import { logHandler } from "../utils/logHandler";
+import { ChatFilter } from "../typings/ChatFilter";
+import initChatFilter from "../systems/chatfilter/chatFilter"
 
 const globPromise = promisify(glob)
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
-    filters: Collection<string, string[]> = new Collection();
-    filtersLog: Collection<string, string> = new Collection();
+    chatFilter: ChatFilter = new ChatFilter();
 
     constructor() {
         super({ intents: 32767 })
     }
 
-    start() {
+    async start() {
+        await initChatFilter(this);
+
         this.registerModules()
         this.login(process.env.botToken)
     }

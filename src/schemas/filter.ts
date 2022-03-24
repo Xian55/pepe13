@@ -2,13 +2,15 @@ import { Document, model, Schema } from "mongoose";
 
 export interface FilterInt extends Document {
     Guild: string,
-    Log: string,
+    Channel: string,
+    Handler: string,
     Words: string[]
 }
 
 export const Filter = new Schema({
     Guild: String,
-    Log: String,
+    Channel: String,
+    Handler: String,
     Words: [String]
 });
 

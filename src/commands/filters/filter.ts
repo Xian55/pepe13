@@ -1,21 +1,35 @@
 import { Command } from "../../structures/Command";
-import filter from "../../schemas/filter";
+import Schema from "../../schemas/filter";
+import { client } from "../..";
+import { ApplicationCommandOptionChoice } from "discord.js";
+
+let handlerChoices: ApplicationCommandOptionChoice[] = [];
+for (let element of client.chatFilter.filters) {
+    let choice = { name: element[0], value: element[0] };
+    handlerChoices.push(choice);
+}
 
 export default new Command({
     name: "filter",
     description: "A simple chat filter system",
     options: [
         {
-            name: "settings",
-            description: "A simple chat filtering system.",
+            name: "toggle",
+            description: "Toggle a chat filtering system.",
             type: "SUB_COMMAND",
             options: [
                 {
-                    name: "logging",
-                    description: "Select the loggings channel",
+                    name: "channel",
+                    description: "Select the channel",
                     type: "CHANNEL",
                     channelTypes: ["GUILD_TEXT"],
-                    required: true
+                    required: true,
+                },
+                {
+                    name: "type",
+                    description: "Type of filter",
+                    type: "STRING",
+                    choices: handlerChoices
                 }
             ]
         },
@@ -49,24 +63,43 @@ export default new Command({
     ],
     run: async ({ interaction, client }) => {
         const { guild, options } = interaction;
+        const handler = options.getString("type") || "default";
 
         const subCommand = options.getSubcommand();
         switch (subCommand) {
-            case "settings":
-                const channelId = options.getChannel("logging").id;
+            case "toggle":
+                const channelId = options.getChannel("channel").id;
 
-                await filter.findOneAndUpdate(
-                    { Guild: guild.id },
-                    { Log: channelId },
-                    { new: true, upsert: true }
-                );
+                const exist = await Schema.exists({ Guild: guild.id, Channel: channelId, Handler: handler });
+                if (!exist) {
+                    await Schema.findOneAndUpdate(
+                        { Guild: guild.id, Channel: channelId, Handler: handler },
+                        { Channel: channelId, Handler: handler },
+                        { new: true, upsert: true }
+                    );
 
-                client.filtersLog.set(guild.id, channelId);
+                    client.chatFilter.channels.set(guild.id, channelId);
+                    client.chatFilter.handlers.set(channelId, [handler]);
 
-                interaction.followUp({
-                    content: `Added <#${channelId} as the logging channel for the filtering system.`,
-                    ephemeral: true
-                });
+                    interaction.followUp({
+                        content: `Enabled filtering on <#${channelId}>.`,
+                        ephemeral: true
+                    });
+                }
+                else {
+                    await Schema.findOneAndDelete(
+                        { Guild: guild.id, Handler: handler },
+                        { Channel: channelId }
+                    );
+
+                    delete client.chatFilter.channels[guild.id];
+
+                    interaction.followUp({
+                        content: `Disabled filtering on <#${channelId}>`,
+                        ephemeral: true
+                    });
+                }
+
                 break;
             case "config":
                 const choice = options.getString("options");
@@ -74,11 +107,11 @@ export default new Command({
 
                 switch (choice) {
                     case "add":
-                        filter.findOne({ Guild: guild.id }, async (err, data) => {
+                        Schema.findOne({ Guild: guild.id }, async (err, data) => {
                             if (err) throw err;
                             if (!data) {
-                                await filter.create({ Guild: guild.id, Log: null, Words: words });
-                                client.filters.set(guild.id, words);
+                                await Schema.create({ Guild: guild.id, Channel: null, Handler: handler, Words: words });
+                                client.chatFilter.words.set(guild.id, words);
                                 interaction.followUp({ content: `Added ${words.length} new words(s) to the blacklist.` });
                             }
 
@@ -87,7 +120,7 @@ export default new Command({
                                 if (data.Words.includes(w)) return;
                                 newWords.push(w);
                                 data.Words.push(w);
-                                client.filters.get(guild.id).push(w);
+                                client.chatFilter.words.get(guild.id).push(w);
                             });
 
                             interaction.followUp({ content: `Added ${newWords.length} new word(s) to the blacklist` });
@@ -95,7 +128,7 @@ export default new Command({
                         });
                         break;
                     case "remove":
-                        filter.findOne({ Guild: guild.id }, async (err, data) => {
+                        Schema.findOne({ Guild: guild.id }, async (err, data) => {
                             if (err) throw err;
                             if (!data) {
                                 return interaction.followUp({ content: "There is no data to remove." });
@@ -108,17 +141,16 @@ export default new Command({
                                 removedWords.push(w);
                             });
 
-                            const newArray = client.filters
+                            const newArray = client.chatFilter.words
                                 .get(guild.id)
                                 .filter((word) => !removedWords.includes(word));
 
-                            client.filters.set(guild.id, newArray);
+                            client.chatFilter.words.set(guild.id, newArray);
 
                             interaction.followUp({ content: `Removed ${removedWords.length} word(s) from the blacklist.` });
                         })
                         break;
                 }
-
                 break;
         }
     }
