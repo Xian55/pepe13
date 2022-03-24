@@ -29,11 +29,11 @@ export class ExtendedClient extends Client {
     async registerCommands({ commands, guildId }: RegisterCommandsOptions) {
         if (guildId) {
             this.guilds.cache.get(guildId)?.commands.set(commands);
-            logHandler.log("info", `Registering commands to ${guildId}`);
+            logHandler.log("info", `Registered ${commands.length} commands to ${guildId}`);
         }
         else {
             this.application.commands.set(commands);
-            logHandler.log("info", "Registering global commands");
+            logHandler.log("info", `Registered ${commands.length} global commands`);
         }
     }
 
