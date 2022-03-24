@@ -10,7 +10,7 @@ const globPromise = promisify(glob)
 
 export default async (client: ExtendedClient) => {
 
-    const files = await globPromise(`${__dirname}/../filters/*{.ts,.js}`);
+    const files = await globPromise(`${__dirname}/filters/*{.ts,.js}`);
     files.forEach(async filePath => {
         const basename = path.basename(filePath, '.ts');
         const filter: IChatFilter = await client.importFile(filePath);
