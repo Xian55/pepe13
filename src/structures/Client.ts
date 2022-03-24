@@ -10,6 +10,8 @@ const globPromise = promisify(glob)
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
+    filters: Collection<string, string[]> = new Collection();
+    filtersLog: Collection<string, string> = new Collection();
 
     constructor() {
         super({ intents: 32767 })

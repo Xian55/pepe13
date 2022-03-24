@@ -1,11 +1,5 @@
+import { client } from "..";
 import { Event } from "../structures/Events";
-
-const badWords = [
-    "xd",
-    "☓d",
-    "×d",
-    "ᵡᴰ"
-];
 
 const imgUrl = "https://pics.me.me/dont-xd-350-penalty-30971828.png";
 
@@ -15,13 +9,18 @@ export default new Event('messageCreate', async (message) => {
     const { content, guild, author, channel } = message;
     const words = content.toLowerCase().split(" ");
 
+    const Filter = client.filters.get(guild.id);
+    if (!Filter) return;
+
+    const wordsUsed: string[] = [];
     let shouldDelete = false;
-    for (let word of words) {
-        if (badWords.includes(word)) {
+
+    words.forEach((word) => {
+        if (Filter.includes(word)) {
+            wordsUsed.push(word);
             shouldDelete = true;
-            break;
         }
-    }
+    });
 
     if (shouldDelete) {
         const channel = message.channel;
