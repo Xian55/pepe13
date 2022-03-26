@@ -50,7 +50,8 @@ export class ExtendedClient extends Client {
         });
 
         this.player.on("trackAdd", (queue, track) => {
-            if (queue.tracks.length == 1) return;
+            if (track.author == 'file:\\' || queue.tracks.length == 1) return;
+
             const channel = queue.metadata as AnyChannel;
             if (channel.isVoice()) {
                 console.log(`🎶 | Track **${track.title}** queued!`);

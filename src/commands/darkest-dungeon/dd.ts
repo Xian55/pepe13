@@ -38,7 +38,8 @@ export default new Command({
             return void interaction.followUp({ content: "Could not join your voice channel!" });
         }
 
-        await interaction.followUp({ content: `⏱ | Playing quote '${description}'` });
+        await interaction.followUp({ content: "done" });
+        interaction.deleteReply();
 
         const filePath = path.join(dataPath, "voice-data", key);
         if (!fs.existsSync(filePath)) return;
@@ -49,11 +50,11 @@ export default new Command({
 
         const data: RawTrackData = {
             title: description,
-            description: "1900",
-            author: "Darkest Dungeon",
+            description: "file:\\",
+            author: "file:\\",
             url: filePath,
-            thumbnail: "string",
-            duration: "10s",
+            thumbnail: "file:\\",
+            duration: "10",
             views: 0,
             requestedBy: member.user,
             source: "arbitrary",
