@@ -19,3 +19,8 @@ During development use
 npm run start:dev
 ```
 to instantly hot reload the app.
+
+
+## Plugin deps
+
+1. [Darkest dungeon soundboard](https://mega.nz/file/6IgDjbII#-L6pL18SDHOHN-wcb8gCmLReIox69xiT6Y6NDoTW8VA) under `/data/darkest/voice-data/*.ogg`
