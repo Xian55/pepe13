@@ -35,8 +35,9 @@ export default new Event('voiceStateUpdate',
         const queue = player.createQueue(guild, {
             metadata: channel,
             autoSelfDeaf: false,
-            bufferingTimeout: 500,
-            initialVolume: 50
+            bufferingTimeout: 0,
+            initialVolume: 25,
+            volumeSmoothness: 0.1
         });
 
         try {

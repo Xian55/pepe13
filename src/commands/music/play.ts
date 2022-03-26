@@ -31,8 +31,9 @@ export default new Command({
         const queue = player.createQueue(guild, {
             metadata: channel,
             autoSelfDeaf: false,
-            bufferingTimeout: 100,
-            initialVolume: 50
+            bufferingTimeout: 0,
+            initialVolume: 25,
+            volumeSmoothness: 0.1
         });
 
         try {
