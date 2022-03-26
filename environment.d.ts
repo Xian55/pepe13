@@ -6,6 +6,7 @@ declare global {
             guildId: string;
             MONGO_URI: string;
             environment: "dev" | "prod" | "debug";
+            plebek_post: string;
         }
     }
 }
