@@ -1,7 +1,7 @@
 import { TextChannel } from "discord.js";
 import { Command } from "../../structures/Command";
 
-const defaultAmount = 1;
+const defaultAmount = 2;
 
 export default new Command({
     name: "cc",
