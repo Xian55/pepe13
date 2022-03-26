@@ -18,7 +18,7 @@ export default new Command({
         const { channel } = interaction;
         if (!channel.isText()) return;
 
-        const amount = args.getInteger("amount") || defaultAmount;
+        const amount = Math.min(args.getInteger("amount"), 100) || defaultAmount;
 
         const textChannel = channel as TextChannel;
         await textChannel.bulkDelete(amount);
