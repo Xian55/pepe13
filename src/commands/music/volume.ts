@@ -1,6 +1,8 @@
 import { Command } from "../../structures/Command";
 import { client } from "../..";
 
+const { player } = client;
+
 export default new Command({
     name: 'volume',
     description: "Sets music volume",
@@ -13,7 +15,7 @@ export default new Command({
         }
     ],
     run: async ({ interaction }) => {
-        const queue = client.player.getQueue(interaction.guildId);
+        const queue = player.getQueue(interaction.guildId);
         if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
 
         const vol = interaction.options.getInteger("amount");

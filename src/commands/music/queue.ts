@@ -1,11 +1,13 @@
 import { Command } from "../../structures/Command";
 import { client } from "../..";
 
+const { player } = client;
+
 export default new Command({
     name: 'queue',
     description: "See the queue",
     run: async ({ interaction }) => {
-        const queue = client.player.getQueue(interaction.guildId);
+        const queue = player.getQueue(interaction.guildId);
         if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
         const currentTrack = queue.current;
         const tracks = queue.tracks.slice(0, 10).map((m, i) => {

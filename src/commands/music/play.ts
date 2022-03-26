@@ -2,6 +2,8 @@ import { Command } from "../../structures/Command";
 import { client } from "../..";
 import { QueryType } from "discord-player";
 
+const { player } = client;
+
 export default new Command({
     name: 'play',
     description: 'Plays a song',
@@ -15,7 +17,7 @@ export default new Command({
     ],
     run: async ({ interaction }) => {
         const query = interaction.options.getString("query");
-        const searchResult = await client.player
+        const searchResult = await player
             .search(query, {
                 requestedBy: interaction.user,
                 searchEngine: interaction.commandName === "soundcloud" ? QueryType.SOUNDCLOUD_SEARCH : QueryType.AUTO
@@ -23,16 +25,15 @@ export default new Command({
             .catch(console.warn);
         if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results were found!" });
 
-        const queue = client.player.createQueue(interaction.guild, {
-            metadata: interaction.channel
+        const queue = player.createQueue(interaction.guild, {
+            metadata: interaction.channel,
+            autoSelfDeaf: false
         });
 
         try {
-            queue.options.autoSelfDeaf = false;
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-
         } catch {
-            void client.player.deleteQueue(interaction.guildId);
+            void player.deleteQueue(interaction.guildId);
             return void interaction.followUp({ content: "Could not join your voice channel!" });
         }
 
