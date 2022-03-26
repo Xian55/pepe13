@@ -1,4 +1,4 @@
-import { NewsChannel, VoiceState } from "discord.js";
+import { VoiceState } from "discord.js";
 import { client } from "..";
 import { Event } from "../structures/Events";
 import { logHandler } from "../utils/logHandler";

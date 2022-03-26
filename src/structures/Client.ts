@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, Client, ClientEvents, Collection } from "discord.js";
+import { ApplicationCommandDataResolvable, Client, ClientEvents, Collection, TextBasedChannel } from "discord.js";
 import { CommandType } from "../typings/Commands";
 import glob from "glob";
 import { promisify } from "util";
@@ -7,15 +7,55 @@ import { Event } from "./Events";
 import { logHandler } from "../utils/logHandler";
 import { ChatFilter } from "../typings/ChatFilter";
 import initChatFilter from "../systems/chatfilter/chatFilter"
+import { Player } from "discord-player";
 
 const globPromise = promisify(glob)
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
     chatFilter: ChatFilter = new ChatFilter();
+    player: Player;
 
     constructor() {
         super({ intents: 32767 })
+
+        this.player = new Player(this);
+        this.player.on("error", (queue, error) => {
+            console.log(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
+        });
+        this.player.on("connectionError", (queue, error) => {
+            console.log(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
+        });
+
+        this.player.on("trackStart", (queue, track) => {
+            const textChannel = queue.metadata as TextBasedChannel;
+            if (!textChannel) return;
+            textChannel.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+        });
+
+        this.player.on("trackAdd", (queue, track) => {
+            const textChannel = queue.metadata as TextBasedChannel;
+            if (!textChannel) return;
+            textChannel.send(`🎶 | Track **${track.title}** queued!`);
+        });
+
+        this.player.on("botDisconnect", (queue) => {
+            const textChannel = queue.metadata as TextBasedChannel;
+            if (!textChannel) return;
+            textChannel.send("❌ | I was manually disconnected from the voice channel, clearing queue!");
+        });
+
+        this.player.on("channelEmpty", (queue) => {
+            const textChannel = queue.metadata as TextBasedChannel;
+            if (!textChannel) return;
+            textChannel.send("❌ | Nobody is in the voice channel, leaving...");
+        });
+
+        this.player.on("queueEnd", (queue) => {
+            const textChannel = queue.metadata as TextBasedChannel;
+            if (!textChannel) return;
+            textChannel.send("✅ | Queue finished!");
+        });
     }
 
     async start() {

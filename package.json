@@ -14,8 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/voice": "^0.8.0",
     "@sentry/node": "^6.19.2",
     "@types/mongoose": "^5.11.97",
+    "discord-player": "^5.2.2",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "glob": "^7.2.0",
