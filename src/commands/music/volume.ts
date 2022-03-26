@@ -15,11 +15,11 @@ export default new Command({
         }
     ],
     run: async ({ interaction }) => {
-        const queue = player.getQueue(interaction.guildId);
+        const { guildId, options } = interaction;
+        const queue = player.getQueue(guildId);
         if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
 
-        const vol = interaction.options.getInteger("amount");
-
+        const vol = options.getInteger("amount");
         if (!vol) return void interaction.followUp({ content: `🎧 | Current volume is **${queue.volume}**%!` });
         if ((vol) < 0 || (vol) > 100) return void interaction.followUp({ content: "❌ | Volume range must be 0-100" });
         const success = queue.setVolume(vol);

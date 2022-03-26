@@ -19,7 +19,6 @@ export default new Command({
         },
     ],
     run: async ({ interaction }) => {
-
         const { options, member, guild, guildId, channel } = interaction;
         const query = options.getString("query");
         const { key, description } = findBestQuote(query);
@@ -28,6 +27,7 @@ export default new Command({
             metadata: channel,
             autoSelfDeaf: false,
             bufferingTimeout: 100,
+            initialVolume: 50
         });
 
         try {

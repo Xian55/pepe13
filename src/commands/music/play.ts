@@ -16,24 +16,29 @@ export default new Command({
         },
     ],
     run: async ({ interaction }) => {
-        const query = interaction.options.getString("query");
+
+        const { options, channel, member, user, commandName, guild, guildId } = interaction;
+        const query = options.getString("query");
+
         const searchResult = await player
             .search(query, {
-                requestedBy: interaction.user,
-                searchEngine: interaction.commandName === "soundcloud" ? QueryType.SOUNDCLOUD_SEARCH : QueryType.AUTO
+                requestedBy: user,
+                searchEngine: commandName === "soundcloud" ? QueryType.SOUNDCLOUD_SEARCH : QueryType.AUTO
             })
             .catch(console.warn);
         if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results were found!" });
 
-        const queue = player.createQueue(interaction.guild, {
-            metadata: interaction.channel,
-            autoSelfDeaf: false
+        const queue = player.createQueue(guild, {
+            metadata: channel,
+            autoSelfDeaf: false,
+            bufferingTimeout: 100,
+            initialVolume: 50
         });
 
         try {
-            if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+            if (!queue.connection) await queue.connect(member.voice.channel);
         } catch {
-            void player.deleteQueue(interaction.guildId);
+            void player.deleteQueue(guildId);
             return void interaction.followUp({ content: "Could not join your voice channel!" });
         }
 
