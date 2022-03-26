@@ -72,30 +72,35 @@ export default new Command({
 
                 const exist = await Schema.exists({ Guild: guild.id, Channel: channelId, Handler: handler });
                 if (!exist) {
-                    await Schema.findOneAndUpdate(
-                        { Guild: guild.id, Channel: channelId, Handler: handler },
-                        { Channel: channelId, Handler: handler },
-                        { new: true, upsert: true }
+                    await Schema.create(
+                        { Guild: guild.id, Channel: channelId, Handler: handler }
                     );
 
                     client.chatFilter.channels.set(guild.id, channelId);
-                    client.chatFilter.handlers.set(channelId, [handler]);
+
+                    let collection = client.chatFilter.handlers.get(channelId) || [];
+                    collection.push(handler);
+                    client.chatFilter.handlers.set(channelId, collection);
 
                     interaction.followUp({
-                        content: `Enabled filtering on <#${channelId}>.`,
+                        content: `Enabled ${handler} filtering on <#${channelId}>.`,
                         ephemeral: true
                     });
                 }
                 else {
                     await Schema.findOneAndDelete(
-                        { Guild: guild.id, Handler: handler },
-                        { Channel: channelId }
+                        { Guild: guild.id, Channel: channelId, Handler: handler }
                     );
 
-                    delete client.chatFilter.channels[guild.id];
+                    let collection = client.chatFilter.handlers.get(channelId);
+                    if (collection) {
+                        collection.splice(collection.indexOf(handler), 1);
+                        if (collection.length == 0)
+                            delete client.chatFilter.channels[guild.id];
+                    }
 
                     interaction.followUp({
-                        content: `Disabled filtering on <#${channelId}>`,
+                        content: `Disabled ${handler} filtering on <#${channelId}>`,
                         ephemeral: true
                     });
                 }

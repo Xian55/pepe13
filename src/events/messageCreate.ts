@@ -14,6 +14,6 @@ export default new Event('messageCreate', async (message) => {
     //console.log(handlers);
 
     handlers.forEach((handler) => {
-        client.chatFilter.filters.get(handler).run({ client, message });
+        client.chatFilter.filters.get(handler)?.run({ client, message });
     });
 })
