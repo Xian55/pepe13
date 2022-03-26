@@ -43,7 +43,14 @@ export default new Command({
             return void interaction.followUp({ content: "Could not join your voice channel!" });
         }
 
-        await interaction.followUp({ content: `⏱ | Loading your ${searchResult.playlist ? "playlist" : "track"}...` });
+        if (searchResult.playlist) {
+            await interaction.followUp({ content: `⏱ | Loading playlist...` });
+        }
+        else {
+            await interaction.followUp({ content: "done" });
+            interaction.deleteReply();
+        }
+
         searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
         if (!queue.playing) await queue.play();
     }

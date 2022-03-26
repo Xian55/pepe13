@@ -42,11 +42,11 @@ export class ExtendedClient extends Client {
         this.player.on("trackStart", (queue, track) => {
             const channel = queue.metadata as AnyChannel;
             if (channel.isVoice()) {
-                logHandler.log("debug", `🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+                logHandler.log("debug", `🎶 | Playing: ${track.title} in ${queue.connection.channel.name}!`);
                 return;
             }
             const textChannel = queue.metadata as TextBasedChannel;
-            textChannel.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+            textChannel.send(`🎶 | Playing: \`${track.title}\` in **${queue.connection.channel.name}**!`);
         });
 
         this.player.on("trackAdd", (queue, track) => {
@@ -54,11 +54,11 @@ export class ExtendedClient extends Client {
 
             const channel = queue.metadata as AnyChannel;
             if (channel.isVoice()) {
-                console.log(`🎶 | Track **${track.title}** queued!`);
+                console.log(`🎶 | Queued: ${track.title} Track!`);
                 return;
             }
             const textChannel = queue.metadata as TextBasedChannel;
-            textChannel.send(`🎶 | Track **${track.title}** queued!`);
+            textChannel.send(`🎶 | Queued: \`${track.title}\` Track!`);
         });
 
         this.player.on("botDisconnect", (queue) => {
