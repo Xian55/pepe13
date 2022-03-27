@@ -22,7 +22,7 @@ export default new Command({
             await Schema.findOneAndDelete(
                 { Guild: guild.id, Member: member.id }
             );
-            interaction.followUp({ content: `Welcome deleted!` });
+            interaction.followUp({ content: `Welcome deleted!`, ephemeral: true });
         }
         else {
             await Schema.findOneAndUpdate(
@@ -30,7 +30,7 @@ export default new Command({
                 { Link: link },
                 { new: true, upsert: true }
             );
-            interaction.followUp({ content: `Welcome updated to ${link}` });
+            interaction.followUp({ content: `Welcome updated to ${link}`, ephemeral: true });
         }
     }
 })
