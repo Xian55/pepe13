@@ -135,8 +135,13 @@ export class ExtendedClient extends Client {
 
         eventFiles.forEach(async filePath => {
             const events: Event<keyof ClientEvents>[] = await this.importFile(filePath)
-            for (const event of events)
-                this.on(event.event, event.run)
+            try {
+                for (const event of events)
+                    this.on(event.event, event.run)
+            }
+            catch (e) {
+                console.error(filePath, e);
+            }
         })
     }
 
