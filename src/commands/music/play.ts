@@ -11,7 +11,7 @@ export default new Command({
         {
             name: 'query',
             type: 'STRING' as const,
-            description: 'The URL of the song to play',
+            description: '(YouTube, Spotify, SoundCloud) link or (search term)',
             required: true,
         },
     ],
