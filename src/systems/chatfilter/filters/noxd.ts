@@ -1,3 +1,5 @@
+import { Message } from "discord.js";
+
 const imgUrl = "https://pics.me.me/dont-xd-350-penalty-30971828.png";
 
 const table = [
@@ -5,7 +7,7 @@ const table = [
 ];
 
 export default {
-    async run({ message }) {
+    async run({ message }: { message: Message }) {
         if (message.author.bot) return;
 
         const { content, channel } = message;

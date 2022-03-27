@@ -9,7 +9,7 @@ client.on("ready", () => {
 });
 
 export default {
-    async run({ message }) {
+    async run({ message }: { message: Message }) {
         if (shouldReact(message))
             message.react(memeCoin.id);
     }

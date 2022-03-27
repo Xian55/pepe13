@@ -1,9 +1,14 @@
 import path from "path";
 import fs from "fs";
 import util from 'util';
+import { Message } from "discord.js";
+import ChildProcess from "child_process";
+const exec = util.promisify(ChildProcess.exec);
 
 export default {
-    async run({ message }) {
+    async run({ message }: { message: Message }) {
+        if (message.author.bot) return;
+
         const { content, channel } = message;
         const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\//im;
         if (!regex.test(content)) return;
@@ -15,30 +20,29 @@ export default {
 
         const serverPath = `${__dirname}./../../../../tmp/`;
         const id = safeUrl.split('/').pop();
-        const savePath = path.join(serverPath, (spoiler ? 'SPOILER_' : '') + id + '.mp4');
+        const fileName = (spoiler ? 'SPOILER_' : '') + id + '.mp4';
+        const savePath = path.join(serverPath, fileName);
 
-        const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 12`; // -C
+        const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 12`;
         await execAsync(cmd);
 
         if (!fs.existsSync(savePath)) {
-            console.warn(`file ${savePath} not exists!`);
+            console.warn(`${savePath} not exists!`);
             return;
         }
 
         await channel.send(
             {
+                content: (spoiler ? '**NSFW** - ' : '') + content,
                 files: [
                     {
                         attachment: savePath,
-                        name: `${id}.mp4`,
-                        description: (spoiler ? '**NSFW** - ' : '') + content
+                        name: fileName,
                     }
                 ]
-            }).then(async rsp => {
-                await message.delete({ timeout: 1000 })
-                    //.then(() => console.log(`Deleted request of ${content}`))
-                    .catch(console.error);
-            }).catch(console.log);
+            });
+
+        setTimeout(() => message.delete(), 1000);
 
         deleteFile(savePath);
     }
@@ -47,14 +51,11 @@ export default {
 
 async function execAsync(cmd: string) {
     try {
-        const exec = util.promisify(require('child_process').exec);
-
-        //console.log(`execAsync-${cmd}`);
-        //const { stdout, stderr } = await exec(`whoami && ${cmd}`);
+        //console.log(`[coub-dl] execAsync-star-${cmd}`);
         const { stdout, stderr } = await exec(cmd);
-        //console.log(`execAsync-finish`);
-        //if (stdout.length > 0)
-        //console.log('[coub-dl] stdout:', stdout);
+        //console.log(`[coub-dl] execAsync-finish`);
+        if (stdout.length > 0)
+            console.log('[coub-dl] stdout:', stdout);
 
         if (stderr.length > 0)
             console.log('[coub-dl] stderr:', stderr);

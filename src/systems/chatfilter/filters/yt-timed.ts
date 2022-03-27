@@ -1,5 +1,7 @@
+import { Message } from "discord.js";
+
 export default {
-    async run({ message }) {
+    async run({ message }: { message: Message }) {
         if (message.author.bot) return;
         const { content } = message;
         let regex = /https:\/\/(www\.|)youtu(be\.com|\.be)\/[\S]*(\?|&)t=[\d]+(\n| |)/im;
