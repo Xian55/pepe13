@@ -9,7 +9,6 @@ import { IChatFilter } from "../../typings/ChatFilter";
 const globPromise = promisify(glob)
 
 export default async (client: ExtendedClient) => {
-
     const files = await globPromise(`${__dirname}/filters/*{.ts,.js}`);
     files.forEach(async filePath => {
         const basename = path.basename(filePath, '.ts');

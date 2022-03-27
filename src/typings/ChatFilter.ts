@@ -10,12 +10,13 @@ export class ChatFilter {
     filters: Collection<string, IChatFilter> = new Collection();
 
     populate(doc: FilterInt) {
-        this.channels.set(doc.Guild, doc.Channel);
-        this.words.set(doc.Guild, doc.Words);
+        const { Guild, Channel, Words, Handler } = doc;
+        this.channels.set(Guild, Channel);
+        this.words.set(Guild, Words);
 
-        let handlers: string[] = this.handlers.get(doc.Channel) || [];
-        handlers.push(doc.Handler)
-        this.handlers.set(doc.Channel, handlers);
+        let handlers: string[] = this.handlers.get(Channel) || [];
+        handlers.push(Handler)
+        this.handlers.set(Channel, handlers);
     }
 }
 

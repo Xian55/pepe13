@@ -22,11 +22,12 @@ export default new Command({
         }
     ],
     run: async ({ interaction, args }) => {
+        const { followUp } = interaction;
         const term = args.getString("query");
         UrbanDictionary.define(term, (error: Error, entries) => {
             if (error) {
                 console.error(error.message);
-                return void interaction.followUp(error.message);
+                return void followUp(error.message);
             }
 
             const order = Math.min(args.getInteger("order"), entries.length - 1) || defaultOrder;
@@ -54,7 +55,7 @@ export default new Command({
                 }
             });
 
-            interaction.followUp({ embeds: [embed], files: attachments });
+            followUp({ embeds: [embed], files: attachments });
         })
     }
 })

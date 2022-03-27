@@ -23,7 +23,9 @@ export default new Command({
             user,
             commandName,
             guild,
-            guildId } = interaction;
+            guildId,
+            followUp,
+            deleteReply } = interaction;
 
         const query = options.getString("query");
 
@@ -36,7 +38,7 @@ export default new Command({
             .catch(console.warn);
 
         if (!searchResult || !searchResult.tracks.length)
-            return void interaction.followUp({ content: "No results were found!" });
+            return void followUp({ content: "No results were found!" });
 
         const queue = player.createQueue(guild, {
             metadata: channel,
@@ -50,15 +52,15 @@ export default new Command({
             if (!queue.connection) await queue.connect(member.voice.channel);
         } catch {
             void player.deleteQueue(guildId);
-            return void interaction.followUp({ content: "Could not join your voice channel!" });
+            return void followUp({ content: "Could not join your voice channel!" });
         }
 
         if (searchResult.playlist) {
-            await interaction.followUp({ content: `⏱ | Loading playlist...` });
+            await followUp({ content: `⏱ | Loading playlist...` });
         }
         else {
-            await interaction.followUp({ content: "done" });
-            interaction.deleteReply();
+            await followUp({ content: "done" });
+            deleteReply();
         }
 
         searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
