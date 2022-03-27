@@ -63,8 +63,8 @@ export default new Command({
             ]
         }
     ],
-    run: async ({ interaction, client }) => {
-        const { guild, options, followUp } = interaction;
+    run: async ({ interaction }) => {
+        const { guild, options } = interaction;
         const handler = options.getString("type") || "default";
 
         const subCommand = options.getSubcommand();
@@ -84,7 +84,7 @@ export default new Command({
                     collection.push(handler);
                     chatFilter.handlers.set(channelId, collection);
 
-                    followUp({
+                    interaction.followUp({
                         content: `Enabled ${handler} filter on <#${channelId}>.`,
                         ephemeral: true
                     });
@@ -101,7 +101,7 @@ export default new Command({
                             delete chatFilter.channels[guild.id];
                     }
 
-                    followUp({
+                    interaction.followUp({
                         content: `Disabled ${handler} filter on <#${channelId}>`,
                         ephemeral: true
                     });
@@ -119,7 +119,7 @@ export default new Command({
                             if (!data) {
                                 await Schema.create({ Guild: guild.id, Channel: null, Handler: handler, Words: words });
                                 chatFilter.words.set(guild.id, words);
-                                followUp({ content: `Added ${words.length} new words(s) to the blacklist.` });
+                                interaction.followUp({ content: `Added ${words.length} new words(s) to the blacklist.` });
                             }
 
                             const newWords: string[] = []
@@ -130,7 +130,7 @@ export default new Command({
                                 chatFilter.words.get(guild.id).push(w);
                             });
 
-                            followUp({ content: `Added ${newWords.length} new word(s) to the blacklist` });
+                            interaction.followUp({ content: `Added ${newWords.length} new word(s) to the blacklist` });
                             data.save();
                         });
                         break;
@@ -138,7 +138,7 @@ export default new Command({
                         Schema.findOne({ Guild: guild.id }, async (err, data) => {
                             if (err) throw err;
                             if (!data) {
-                                return followUp({ content: "There is no data to remove." });
+                                return interaction.followUp({ content: "There is no data to remove." });
                             }
 
                             const removedWords: string[] = [];
@@ -154,7 +154,7 @@ export default new Command({
 
                             chatFilter.words.set(guild.id, newArray);
 
-                            followUp({ content: `Removed ${removedWords.length} word(s) from the blacklist.` });
+                            interaction.followUp({ content: `Removed ${removedWords.length} word(s) from the blacklist.` });
                         })
                         break;
                 }

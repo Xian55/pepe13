@@ -21,7 +21,7 @@ export default new Command({
         },
     ],
     run: async ({ interaction }) => {
-        const { options, member, guild, guildId, channel, followUp, deleteReply } = interaction;
+        const { options, member, guild, guildId, channel } = interaction;
         const query = options.getString("query");
         const { key, description } = findBestQuote(query);
 
@@ -38,11 +38,11 @@ export default new Command({
                 await queue.connect(member.voice.channel);
         } catch {
             void player.deleteQueue(guildId);
-            return void followUp({ content: "Could not join your voice channel!" });
+            return void interaction.followUp({ content: "Could not join your voice channel!" });
         }
 
-        await followUp({ content: "done" });
-        deleteReply();
+        await interaction.followUp({ content: "done" });
+        interaction.deleteReply();
 
         const filePath = path.join(dataPath, voicePath, key);
         if (!fs.existsSync(filePath)) return;

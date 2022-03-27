@@ -13,7 +13,7 @@ export default new Command({
         },
     ],
     run: async ({ interaction, args }) => {
-        const { guild, channel, member, followUp } = interaction;
+        const { guild, channel, member } = interaction;
         if (!channel.isText()) return;
 
         const link = args.getString("link") || "";
@@ -22,7 +22,7 @@ export default new Command({
             await Schema.findOneAndDelete(
                 { Guild: guild.id, Member: member.id }
             );
-            followUp({ content: `Welcome deleted!` });
+            interaction.followUp({ content: `Welcome deleted!` });
         }
         else {
             await Schema.findOneAndUpdate(
@@ -30,7 +30,7 @@ export default new Command({
                 { Link: link },
                 { new: true, upsert: true }
             );
-            followUp({ content: `Welcome updated to ${link}` });
+            interaction.followUp({ content: `Welcome updated to ${link}` });
         }
     }
 })

@@ -7,14 +7,14 @@ export default new Command({
     name: 'nowplaying',
     description: 'Now Playing',
     run: async ({ interaction }) => {
-        const { guildId, followUp } = interaction;
+        const { guildId } = interaction;
         const queue = player.getQueue(guildId);
         if (!queue || !queue.playing)
-            return void followUp({ content: "❌ | No music is being played!" });
+            return void interaction.followUp({ content: "❌ | No music is being played!" });
         const progress = queue.createProgressBar();
         const perc = queue.getPlayerTimestamp();
 
-        return void followUp({
+        return void interaction.followUp({
             embeds: [
                 {
                     title: "Now Playing",

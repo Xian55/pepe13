@@ -34,15 +34,15 @@ export default new Command({
         }
     ],
     run: async ({ interaction }) => {
-        const { guildId, options, followUp } = interaction;
+        const { guildId, options } = interaction;
         const queue = player.getQueue(guildId);
         if (!queue || !queue.playing)
-            return void followUp({ content: "❌ | No music is being played!" });
+            return void interaction.followUp({ content: "❌ | No music is being played!" });
 
         const loopMode = options.getInteger("mode") as QueueRepeatMode;
         const success = queue.setRepeatMode(loopMode);
 
         const mode = loopMode === QueueRepeatMode.TRACK ? "🔂" : loopMode === QueueRepeatMode.QUEUE ? "🔁" : "▶";
-        return void followUp({ content: success ? `${mode} | Updated loop mode!` : "❌ | Could not update loop mode!" });
+        return void interaction.followUp({ content: success ? `${mode} | Updated loop mode!` : "❌ | Could not update loop mode!" });
     }
 })

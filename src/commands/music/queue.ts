@@ -7,16 +7,16 @@ export default new Command({
     name: 'queue',
     description: "See the queue",
     run: async ({ interaction }) => {
-        const { guildId, followUp } = interaction;
+        const { guildId } = interaction;
         const queue = player.getQueue(guildId);
         if (!queue || !queue.playing)
-            return void followUp({ content: "❌ | No music is being played!" });
+            return void interaction.followUp({ content: "❌ | No music is being played!" });
         const currentTrack = queue.current;
         const tracks = queue.tracks.slice(0, 10).map((m, i) => {
             return `${i + 1}. **${m.title}** ([link](${m.url}))`;
         });
 
-        return void followUp({
+        return void interaction.followUp({
             embeds: [
                 {
                     title: "Server Queue",

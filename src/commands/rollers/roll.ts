@@ -22,7 +22,6 @@ export default new Command({
         }
     ],
     run: async ({ interaction, args }) => {
-        const { followUp } = interaction;
         let min = args.getInteger("min") || defaultMin;
         let max = args.getInteger("max") || defaultMax;
 
@@ -30,11 +29,11 @@ export default new Command({
         let div = (num % 10);
 
         if (min == defaultMin && max == defaultMax && div > 0 && num / div == 11)
-            followUp({
+            interaction.followUp({
                 content: num.toString(),
                 files: [dubzUrl]
             });
         else
-            followUp(num.toString());
+            interaction.followUp(num.toString());
     }
 })
