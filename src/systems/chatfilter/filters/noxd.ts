@@ -6,11 +6,12 @@ const table = [
 
 export default {
     async run({ message }) {
-        const { content } = message;
+        if (message.author.bot) return;
+
+        const { content, channel } = message;
         const words = content.toLowerCase().split(" ");
 
         let shouldDelete = false;
-
         words.forEach((word) => {
             if (table.includes(word)) {
                 shouldDelete = true;
@@ -19,9 +20,7 @@ export default {
         });
 
         if (shouldDelete) {
-            const channel = message.channel;
             message.delete().catch(() => { });
-
             const reply = await channel.send(imgUrl);
             setTimeout(() => reply.delete(), 5000);
         }
