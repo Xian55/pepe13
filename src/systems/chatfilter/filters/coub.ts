@@ -11,7 +11,7 @@ export default {
         const safeUrl = content.replace(/[||]/g, '');
         const spoiler = content != safeUrl;
 
-        console.log(`processing ${safeUrl}`);
+        //console.log(`processing ${safeUrl}`);
 
         const serverPath = `${__dirname}./../../../../tmp/`;
         const id = safeUrl.split('/').pop();
@@ -21,7 +21,7 @@ export default {
         await execAsync(cmd);
 
         if (!fs.existsSync(savePath)) {
-            console.log(`file ${savePath} not exists!`);
+            console.warn(`file ${savePath} not exists!`);
             return;
         }
 
@@ -36,7 +36,7 @@ export default {
                 ]
             }).then(async rsp => {
                 await message.delete({ timeout: 1000 })
-                    .then(() => console.log(`Deleted request of ${content}`))
+                    //.then(() => console.log(`Deleted request of ${content}`))
                     .catch(console.error);
             }).catch(console.log);
 
@@ -49,16 +49,17 @@ async function execAsync(cmd: string) {
     try {
         const exec = util.promisify(require('child_process').exec);
 
-        console.log(`execAsync-${cmd}`);
+        //console.log(`execAsync-${cmd}`);
         //const { stdout, stderr } = await exec(`whoami && ${cmd}`);
         const { stdout, stderr } = await exec(cmd);
-        console.log(`execAsync-finish`);
-        if (stdout.length > 0)
-            console.log('[coub-dl] stdout:', stdout);
+        //console.log(`execAsync-finish`);
+        //if (stdout.length > 0)
+        //console.log('[coub-dl] stdout:', stdout);
 
         if (stderr.length > 0)
             console.log('[coub-dl] stderr:', stderr);
-    } catch (e) {
+    }
+    catch (e) {
         console.log('[coub-dl] error:', e); // should contain code (exit code) and signal (that caused the termination).
     }
 }
