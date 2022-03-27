@@ -15,7 +15,7 @@ export default new Command({
     options: [
         {
             name: "toggle",
-            description: "Toggle a chat filtering system.",
+            description: "Toggle a chat filter system.",
             type: "SUB_COMMAND",
             options: [
                 {
@@ -83,7 +83,7 @@ export default new Command({
                     client.chatFilter.handlers.set(channelId, collection);
 
                     interaction.followUp({
-                        content: `Enabled ${handler} filtering on <#${channelId}>.`,
+                        content: `Enabled ${handler} filter on <#${channelId}>.`,
                         ephemeral: true
                     });
                 }
@@ -100,7 +100,7 @@ export default new Command({
                     }
 
                     interaction.followUp({
-                        content: `Disabled ${handler} filtering on <#${channelId}>`,
+                        content: `Disabled ${handler} filter on <#${channelId}>`,
                         ephemeral: true
                     });
                 }
