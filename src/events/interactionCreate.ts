@@ -3,7 +3,7 @@ import { client } from "..";
 import { Event } from "../structures/Events";
 import { ExtendedInteraction } from "../typings/Commands";
 
-export default new Event('interactionCreate', async (interaction) => {
+export default [new Event('interactionCreate', async (interaction) => {
     if (interaction.isCommand()) {
         await interaction.deferReply().catch(() => { });
         const command = client.commands.get(interaction.commandName)
@@ -16,4 +16,4 @@ export default new Event('interactionCreate', async (interaction) => {
             interaction: interaction as ExtendedInteraction
         });
     }
-})
+})]

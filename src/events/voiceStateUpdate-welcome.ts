@@ -8,7 +8,7 @@ import Schema from "../schemas/welcome";
 
 const { player } = client;
 
-export default new Event('voiceStateUpdate',
+export default [new Event('voiceStateUpdate',
     async (oldState: VoiceState, newState: VoiceState) => {
         if (newState.id == client.user.id ||
             !newState.channelId ||
@@ -51,4 +51,4 @@ export default new Event('voiceStateUpdate',
         logHandler.log("debug", `⏱ | Loading ${Link} as welcome ...`)
         if (!queue.playing)
             await queue.play(searchResult.tracks[0]);
-    })
+    })]

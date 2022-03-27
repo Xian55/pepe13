@@ -6,11 +6,11 @@ import fs from "fs";
 import { client } from "..";
 import { TextChannel } from "discord.js";
 
-export default new Event('ready', async () => {
+export default [new Event('ready', async () => {
     if (!fs.existsSync(mondayFile)) return;
     let job = new CronJob('0 4 * * MON', task);
     job.start();
-});
+})];
 
 const mondayFile = path.resolve(__dirname, "../../user-data/it_be_monday.mp4")
 

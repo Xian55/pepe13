@@ -134,8 +134,9 @@ export class ExtendedClient extends Client {
         const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`);
 
         eventFiles.forEach(async filePath => {
-            const event: Event<keyof ClientEvents> = await this.importFile(filePath)
-            this.on(event.event, event.run)
+            const events: Event<keyof ClientEvents>[] = await this.importFile(filePath)
+            for (const event of events)
+                this.on(event.event, event.run)
         })
     }
 
