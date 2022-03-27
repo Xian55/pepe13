@@ -16,17 +16,27 @@ export default new Command({
         },
     ],
     run: async ({ interaction }) => {
+        const {
+            options,
+            channel,
+            member,
+            user,
+            commandName,
+            guild,
+            guildId } = interaction;
 
-        const { options, channel, member, user, commandName, guild, guildId } = interaction;
         const query = options.getString("query");
 
         const searchResult = await player
             .search(query, {
                 requestedBy: user,
-                searchEngine: commandName === "soundcloud" ? QueryType.SOUNDCLOUD_SEARCH : QueryType.AUTO
+                searchEngine: commandName === "soundcloud" ?
+                    QueryType.SOUNDCLOUD_SEARCH : QueryType.AUTO
             })
             .catch(console.warn);
-        if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results were found!" });
+
+        if (!searchResult || !searchResult.tracks.length)
+            return void interaction.followUp({ content: "No results were found!" });
 
         const queue = player.createQueue(guild, {
             metadata: channel,

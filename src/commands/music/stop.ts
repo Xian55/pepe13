@@ -9,7 +9,8 @@ export default new Command({
     run: async ({ interaction }) => {
         const { guildId } = interaction;
         const queue = player.getQueue(guildId);
-        if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        if (!queue || !queue.playing)
+            return void interaction.followUp({ content: "❌ | No music is being played!" });
         queue.destroy();
         return void interaction.followUp({ content: "🛑 | Stopped the player!" });
     }
