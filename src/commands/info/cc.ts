@@ -16,7 +16,9 @@ export default new Command({
     ],
     run: async ({ interaction, args }) => {
         const { channel } = interaction;
-        if (!channel.isText()) return;
+
+        if (!channel.isText())
+            return;
 
         const amount = Math.min(args.getInteger("amount"), 100) || defaultAmount;
 

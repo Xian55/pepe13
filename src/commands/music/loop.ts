@@ -36,6 +36,7 @@ export default new Command({
     run: async ({ interaction }) => {
         const { guildId, options } = interaction;
         const queue = player.getQueue(guildId);
+
         if (!queue || !queue.playing)
             return void interaction.followUp({ content: "❌ | No music is being played!" });
 

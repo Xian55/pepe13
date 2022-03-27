@@ -23,7 +23,10 @@ export default new Command({
         const vol = options.getInteger("amount");
         if (!vol)
             return void interaction.followUp({ content: `🎧 | Current volume is **${queue.volume}**%!` });
-        if ((vol) < 0 || (vol) > 100) return void interaction.followUp({ content: "❌ | Volume range must be 0-100" });
+
+        if ((vol) < 0 || (vol) > 100)
+            return void interaction.followUp({ content: "❌ | Volume range must be 0-100" });
+
         const success = queue.setVolume(vol);
         return void interaction.followUp({
             content: success ? `✅ | Volume set to **${vol}%**!` : "❌ | Something went wrong!"
