@@ -15,13 +15,15 @@ export default async (client: ExtendedClient) => {
         const basename = path.basename(filePath, '.ts');
         const filter: IChatFilter = await client.importFile(filePath);
         client.chatFilter.filters.set(basename, filter);
-        logHandler.log("debug", `Added ${basename} -> ${filePath}`);
+        if (process.env.environment == "debug")
+            logHandler.log("debug", `Added ${basename} -> ${filePath}`);
     });
 
     filter.find().then((documents) => {
         documents.forEach((doc) => {
             client.chatFilter.populate(doc as FilterInt);
-            logHandler.log("debug", `ChatFilter [${doc.Handler}] ${doc.Guild} ${doc.Channel} -> ${doc.Words}`)
+            if (process.env.environment == "debug")
+                logHandler.log("debug", `ChatFilter [${doc.Handler}] ${doc.Guild} ${doc.Channel} -> ${doc.Words}`)
         })
     })
 }
