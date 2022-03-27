@@ -5,13 +5,13 @@ import path from "path";
 import fs from "fs";
 
 const { player } = client;
-const dataPath = path.resolve(__dirname, "../../../data/darkest/");
+const dataPath = path.resolve(__dirname, "../../../data/overwatch/");
 const mapFile = "map.json";
 const voicePath = "voice-data";
 
 export default new Command({
-    name: 'dd',
-    description: 'Returns with a Darkest Dungeon quote',
+    name: 'overwatch',
+    description: 'Returns with a Overwatch quote',
     options: [
         {
             name: 'query',
