@@ -130,7 +130,7 @@ export default new Command({
                                 chatFilter.words.get(guild.id).push(w);
                             });
 
-                            interaction.followUp({ content: `Added ${newWords.length} new word(s) to the blacklist` });
+                            interaction.followUp({ content: `Added ${newWords.length} new word(s) to the blacklist.` });
                             data.save();
                         });
                         break;
