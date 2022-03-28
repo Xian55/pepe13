@@ -3,11 +3,11 @@ import Schema from "../../schemas/welcome";
 
 export default new Command({
     name: "welcome",
-    description: "Sets a welcome audio.",
+    description: "Plays a welcome clip when you enter voice channel on the server.",
     options: [
         {
             name: "link",
-            description: `Enter a youtube link!`,
+            description: `public youtube link. Note: Keep the clip duration below 10 seconds!`,
             type: "STRING",
             required: false
         },
