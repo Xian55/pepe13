@@ -12,7 +12,8 @@ export default [new Event('ready', async () => {
     job.start();
 })];
 
-const mondayFile = path.resolve(process.env.user_path, "it_be_monday.mp4")
+const file = "it_be_monday.mp4";
+const mondayFile = path.resolve(process.env.user_path, file);
 
 async function task() {
     const channel = await client.channels.fetch(process.env.plebek_post); // playground - 789904472863146047
@@ -24,8 +25,8 @@ async function task() {
             files: [
                 {
                     attachment: mondayFile,
-                    name: `its_monday.mp4`,
-                    description: "its_monday"
+                    name: file,
+                    description: file
                 }
             ]
         }
