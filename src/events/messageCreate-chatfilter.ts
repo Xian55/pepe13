@@ -11,6 +11,8 @@ export default [new Event('messageCreate', async (message) => {
     if (!channelHasFilter) return;
 
     const channelHandlers = handlers.get(channel.id);
+    if (!channelHandlers) return;
+
     channelHandlers.forEach((handler) => {
         filters.get(handler)?.run({ client, message });
     });
