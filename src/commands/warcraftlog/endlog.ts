@@ -33,41 +33,48 @@ export default new Command({
         await interaction
             .followUp({ content: 'ironforge link added to the log!', ephemeral: true })
             .then((reply) => {
-                setTimeout(() => (reply as Message).delete(), 1000);
+                setTimeout(() => (reply as Message).delete(), 4000);
             });
 
         const { embeds } = message;
 
-        if (embeds.length == 1) {
-            const { url, description } = embeds[0];
-            if (regexLog.test(url)) {
-                const match = url.match(regexLog);
-                const id = match[1];
+        if (embeds.length != 1)
+            return interaction
+                .followUp({ content: "not suported", ephemeral: true });
 
-                if (!id) return;
+        const { url, description } = embeds[0];
 
-                embeds[0].thumbnail = null;
+        if (!regexLog.test(url))
+            return interaction
+                .followUp({ content: "invalid embed link", ephemeral: true });
 
-                if (embeds[0].title.length == 0) {
-                    if (description && description.length == 0) {
-                        embeds[0].title = title;
-                    }
-                    else {
-                        embeds[0].title = description;
-                    }
-                }
+        const match = url.match(regexLog);
+        const id = match[1];
 
-                const ironforgeURL = ironforgeBaseURL + id + "/";
-                const forgeEmbed = new MessageEmbed()
-                    .setTitle("consumable usage")
-                    .setURL(ironforgeURL);
+        if (!id)
+            return interaction
+                .followUp({ content: "format change?!", ephemeral: true });;
 
-                embeds.push(forgeEmbed);
+        embeds[0].thumbnail = null;
 
-                await interaction.followUp({ embeds: embeds }).then(() => {
-                    setTimeout(() => (message as Message).delete(), 1000);
-                });
+        if (embeds[0].title.length == 0) {
+            if (description && description.length == 0) {
+                embeds[0].title = title;
+            }
+            else {
+                embeds[0].title = description;
             }
         }
+
+        const ironforgeURL = ironforgeBaseURL + id + "/";
+        const forgeEmbed = new MessageEmbed()
+            .setTitle("consumable usage")
+            .setURL(ironforgeURL);
+
+        embeds.push(forgeEmbed);
+
+        await interaction.followUp({ embeds: embeds }).then(() => {
+            setTimeout(() => (message as Message).delete(), 4000);
+        });
     }
 })
