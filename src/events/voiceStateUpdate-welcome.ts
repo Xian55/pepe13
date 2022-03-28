@@ -3,7 +3,7 @@ import { client } from "..";
 import { Event } from "../structures/Events";
 import { logHandler } from "../utils/logHandler";
 
-import { QueryType } from "discord-player";
+import { RawTrackData, Track } from "discord-player";
 import Schema from "../schemas/welcome";
 
 const { player } = client;
@@ -12,25 +12,16 @@ export default [new Event('voiceStateUpdate',
     async (oldState: VoiceState, newState: VoiceState) => {
         if (newState.id == client.user.id ||
             !newState.channelId ||
-            oldState.channelId == newState.channelId) return;
+            oldState.channelId == newState.channelId)
+            return;
 
-        const { guild, id, channel } = newState
+        const { guild, id, channel, member } = newState
 
         const data = await Schema.findOne(
             { Guild: guild.id, Member: id }
         );
         if (!data) return;
-
         const { Link } = data;
-
-        const searchResult = await player
-            .search(Link, {
-                requestedBy: newState.member.user,
-                searchEngine: QueryType.YOUTUBE_VIDEO
-            })
-            .catch(console.warn);
-
-        if (!searchResult || !searchResult.tracks.length) return;
 
         const queue = player.createQueue(guild, {
             metadata: channel,
@@ -48,7 +39,23 @@ export default [new Event('voiceStateUpdate',
             console.log(e);
         }
 
-        logHandler.log("debug", `⏱ | Loading ${Link} as welcome ...`)
+        const trackData: RawTrackData = {
+            title: "",
+            description: "",
+            author: "",
+            url: Link,
+            thumbnail: "",
+            duration: "10",
+            views: 0,
+            requestedBy: member.user,
+            source: "youtube"
+        };
+
+        const track = new Track(player, trackData);
+        queue.addTrack(track);
+
         if (!queue.playing)
-            await queue.play(searchResult.tracks[0]);
+            await queue.play();
+
+        logHandler.log("debug", `⏱ | Loading ${Link} as welcome ...`)
     })]
