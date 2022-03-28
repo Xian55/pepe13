@@ -8,6 +8,8 @@ declare global {
             environment: "dev" | "prod" | "debug";
             plebek_post: string;
             data_path: string;
+            tmp_path: string;
+            user_path: string;
         }
     }
 }

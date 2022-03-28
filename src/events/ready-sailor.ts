@@ -12,7 +12,7 @@ export default [new Event('ready', async () => {
     job.start();
 })];
 
-const mondayFile = path.resolve(__dirname, "../../user-data/it_be_monday.mp4")
+const mondayFile = path.resolve(process.env.user_path, "it_be_monday.mp4")
 
 async function task() {
     const channel = await client.channels.fetch(process.env.plebek_post); // playground - 789904472863146047

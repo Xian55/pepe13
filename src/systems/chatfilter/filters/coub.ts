@@ -18,10 +18,9 @@ export default {
 
         //console.log(`processing ${safeUrl}`);
 
-        const serverPath = `${__dirname}./../../../../tmp/`;
         const id = safeUrl.split('/').pop();
         const fileName = (spoiler ? 'SPOILER_' : '') + id + '.mp4';
-        const savePath = path.join(serverPath, fileName);
+        const savePath = path.join(process.env.tmp_path, fileName);
 
         const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 12`;
         await execAsync(cmd);
