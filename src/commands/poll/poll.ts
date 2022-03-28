@@ -16,7 +16,7 @@ export default new Command({
         },
         {
             name: "choice",
-            description: `[Empty 👍👎 or like "one ${sep} two ..."]`,
+            description: `Separator ${sep} like => one ${sep} two ${sep} three ...`,
             type: "STRING",
             required: false
         }
@@ -26,7 +26,7 @@ export default new Command({
         const question = args.getString("question");
         const choice = args.getString("choice");
 
-        if (choice && choice.indexOf(sep) == -1) {
+        if (!choice || choice.indexOf(sep) == -1) {
             const embed = new MessageEmbed().setTitle(`📊 ${question}`);
             await interaction.followUp({ embeds: [embed] }).then(async (msg: Message) => {
                 await msg.react('👍');
