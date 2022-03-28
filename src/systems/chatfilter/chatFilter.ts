@@ -22,8 +22,6 @@ export default async (client: ExtendedClient) => {
     filter.find().then((documents) => {
         documents.forEach((doc) => {
             chatFilter.populate(doc as FilterInt);
-            if (process.env.environment == "debug")
-                logHandler.log("debug", `ChatFilter [${doc.Handler}] ${doc.Guild} ${doc.Channel} -> ${doc.Words}`)
         })
     })
 }
