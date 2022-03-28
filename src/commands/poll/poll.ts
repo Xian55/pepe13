@@ -15,7 +15,7 @@ export default new Command({
             required: true
         },
         {
-            name: "choice",
+            name: "choices",
             description: `Separator ${sep} like => one ${sep} two ${sep} three ...`,
             type: "STRING",
             required: false
@@ -24,9 +24,9 @@ export default new Command({
     run: async ({ interaction, args }) => {
 
         const question = args.getString("question");
-        const choice = args.getString("choice");
+        const choices = args.getString("choices");
 
-        if (!choice || choice.indexOf(sep) == -1) {
+        if (!choices || choices.indexOf(sep) == -1) {
             const embed = new MessageEmbed().setTitle(`📊 ${question}`);
             await interaction.followUp({ embeds: [embed] }).then(async (msg: Message) => {
                 await msg.react('👍');
@@ -34,13 +34,11 @@ export default new Command({
             });
         }
         else {
-            const embed = new MessageEmbed().setTitle(`📊 ${question}`);
-
-            const options = choice.split(sep).map(e => e.trim());
+            const options = choices.split(sep).map(e => e.trim());
             if (options.length > emojiAlphabet.length) {
                 return await interaction.followUp(
                     {
-                        content: `Exceeded maximum available options (${emojiAlphabet.length})! Please reduce the option count.`,
+                        content: `Exceeded maximum available choices (${options.length})! Please reduce the choice count (${options.length} < ${emojiAlphabet.length}) .`,
                         ephemeral: true
                     })
                     .then((reply: Message) => {
@@ -54,7 +52,9 @@ export default new Command({
                 options[i] = `${emojiAlphabet[i]} ${option}`
             });
 
-            embed.setDescription(options.join('\n\n'));
+            const embed = new MessageEmbed()
+                .setTitle(`📊 ${question}`)
+                .setDescription(options.join('\n\n'));
 
             await interaction.followUp({ embeds: [embed] })
                 .then(async (msg: Message) => {
@@ -62,7 +62,6 @@ export default new Command({
                         await msg.react(emojiAlphabet[i]);
                     })
                 });
-
         }
     }
 })
