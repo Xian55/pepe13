@@ -16,7 +16,7 @@ export default new Command({
         },
         {
             name: "choice",
-            description: `[Empty 👍👎 or like "one ${sep} two ${sep} three ${sep} four"]`,
+            description: `[Empty 👍👎 or like "one ${sep} two ..."]`,
             type: "STRING",
             required: false
         }
@@ -27,20 +27,20 @@ export default new Command({
         const choice = args.getString("choice");
 
         if (choice && choice.indexOf(sep) == -1) {
-            const embed = new MessageEmbed().setTitle('📊 ' + question);
+            const embed = new MessageEmbed().setTitle(`📊 ${question}`);
             await interaction.followUp({ embeds: [embed] }).then(async (msg: Message) => {
                 await msg.react('👍');
                 await msg.react('👎');
             });
         }
         else {
-            const embed = new MessageEmbed().setTitle('📊 ' + question);
+            const embed = new MessageEmbed().setTitle(`📊 ${question}`);
 
             const options = choice.split(sep).map(e => e.trim());
             if (options.length > emojiAlphabet.length) {
                 return await interaction.followUp(
                     {
-                        content: `Please don\'t input more than ${emojiAlphabet.length} options.`,
+                        content: `Exceeded maximum available options (${emojiAlphabet.length})! Please reduce the option count.`,
                         ephemeral: true
                     })
                     .then((reply: Message) => {
