@@ -5,7 +5,7 @@ import path from "path";
 import fs from "fs";
 
 const { player } = client;
-const dataPath = path.resolve(__dirname, "../../../data/overwatch/");
+const dataPath = path.resolve(process.env.data_path, "overwatch");
 const mapFile = "map.json";
 const voicePath = "voice-data";
 

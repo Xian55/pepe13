@@ -7,6 +7,7 @@ declare global {
             MONGO_URI: string;
             environment: "dev" | "prod" | "debug";
             plebek_post: string;
+            data_path: string;
         }
     }
 }
