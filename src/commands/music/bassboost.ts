@@ -11,7 +11,7 @@ export default new Command({
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)
-            return void interaction.followUp({ content: "❌ | No music is being played!" });
+            return await interaction.reply({ content: "❌ | No music is being played!", ephemeral: true });
 
         let oldState = queue.getFiltersEnabled().includes("bassboost");
         await queue.setFilters({
@@ -20,6 +20,6 @@ export default new Command({
         });
         let newState = queue.getFiltersEnabled().includes("bassboost");
 
-        return void interaction.followUp({ content: `🎵 | Bassboost ${newState ? "Enabled" : "Disabled"}!` });
+        await interaction.reply({ content: `🎵 | Bassboost \`${newState ? "Enabled" : "Disabled"}\`!` });
     }
 })

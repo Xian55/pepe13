@@ -65,7 +65,7 @@ export default new Command({
             )
         ];
 
-        interaction.editReply({
+        interaction.reply({
             content: `${member} challenged ${opponent} in a Tic-tac-toe game! ${opponent_starts ? `\nMake the first move, ${first}` : ""}`,
             components: components
         })

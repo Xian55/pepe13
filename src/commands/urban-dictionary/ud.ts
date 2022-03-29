@@ -24,10 +24,10 @@ export default new Command({
     run: async ({ interaction }) => {
         const { options } = interaction;
         const term = options.getString("query");
-        UrbanDictionary.define(term, (error: Error, entries) => {
+        UrbanDictionary.define(term, async (error: Error, entries) => {
             if (error) {
                 console.error(error.message);
-                return void interaction.followUp(error.message);
+                return await interaction.reply({ content: error.message, ephemeral: true });
             }
 
             const order = Math.min(options.getInteger("order"), entries.length - 1) || defaultOrder;
@@ -42,7 +42,7 @@ export default new Command({
                 .setTitle(`**[Urban Dictionary] __${term}__ [${(order == 0 ? order + 1 : order)}/${entries.length}]**`)
                 .setURL(entry.permalink)
                 .setAuthor(author)
-                .setDescription(`**Definition**\n${entry.definition}`)
+                .setDescription(`**Definition**\n${entry.definition}\n**Example**\n${entry.example}`)
                 .addFields({ name: 'Written', value: entry.written_on },
                     { name: ':thumbsup:', value: `\`${entry.thumbs_up}\``, inline: true },
                     { name: ':thumbsdown:', value: `\`${entry.thumbs_down}\``, inline: true }
@@ -55,7 +55,7 @@ export default new Command({
                 }
             });
 
-            interaction.followUp({ embeds: [embed], files: attachments });
+            await interaction.reply({ embeds: [embed], files: attachments });
         })
     }
 })

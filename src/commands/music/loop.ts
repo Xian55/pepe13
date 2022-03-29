@@ -38,12 +38,12 @@ export default new Command({
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)
-            return void interaction.followUp({ content: "❌ | No music is being played!" });
+            return await interaction.reply({ content: "❌ | No music is being played!", ephemeral: true });
 
         const loopMode = options.getInteger("mode") as QueueRepeatMode;
         const success = queue.setRepeatMode(loopMode);
 
         const mode = loopMode === QueueRepeatMode.TRACK ? "🔂" : loopMode === QueueRepeatMode.QUEUE ? "🔁" : "▶";
-        return void interaction.followUp({ content: success ? `${mode} | Updated loop mode!` : "❌ | Could not update loop mode!" });
+        await interaction.reply({ content: success ? `${mode} | Updated loop mode!` : "❌ | Could not update loop mode!" });
     }
 })

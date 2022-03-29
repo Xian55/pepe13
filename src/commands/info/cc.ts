@@ -19,6 +19,8 @@ export default new Command({
         const amount = Math.min(options.getInteger("amount"), 100) || defaultAmount;
 
         const textChannel = channel as TextChannel;
-        await textChannel.bulkDelete(amount);
+        const removed = await textChannel.bulkDelete(amount);
+
+        await interaction.reply({ content: `Removed ${removed.size} messages.`, ephemeral: true });
     }
 })

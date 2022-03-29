@@ -15,8 +15,8 @@ export default new Command({
             required: true
         },
         {
-            name: "title",
-            description: `[Only used when report description was empty. The title of the the event]`,
+            name: "custom_title",
+            description: `[Only used when the report description was empty.]`,
             type: "STRING",
             required: false
         }
@@ -25,38 +25,38 @@ export default new Command({
         const { options, channel } = interaction;
 
         const messageId = options.getString("message_id");
-        const message = await channel.messages.fetch(messageId);
-        if (!message) return;
+        let message: Message;
+        try {
+            message = await channel.messages.fetch(messageId);
+            if (!message) return await interaction
+                .reply({ content: "**error:** message not found", ephemeral: true });
+        } catch (e) {
+            return await interaction
+                .reply({ content: `**${e.toString()}**`, ephemeral: true });
+        }
 
         const date = new Date(message.createdTimestamp);
-        const customTitle = options.getString("title") || `${formatDate(date)} log`;
-
-        await interaction
-            .followUp({ content: 'Live log ended. Safe to open Ironforge link!', ephemeral: true })
-            .then((reply) => {
-                setTimeout(() => (reply as Message).delete(), 4000);
-            });
+        const custom_title = options.getString("custom_title") || `${formatDate(date)} log`;
 
         const { embeds } = message;
 
         if (embeds.length != 1)
             return interaction
-                .followUp({ content: "not suported", ephemeral: true });
+                .reply({ content: "**error:** not suported", ephemeral: true });
 
         const embed = embeds[0];
         const { url, description } = embed;
 
         if (!regexLog.test(url))
             return interaction
-                .followUp({ content: "invalid embed link", ephemeral: true });
+                .reply({ content: "**error:** invalid embed link", ephemeral: true });
 
         const match = url.match(regexLog);
         const id = match[1];
 
         if (!id)
             return interaction
-                .followUp({ content: "format change?!", ephemeral: true });
-
+                .reply({ content: "**error:** format changed?!", ephemeral: true });
 
         embed.thumbnail = null;
 
@@ -65,7 +65,7 @@ export default new Command({
             embed.description = null;
         }
         else {
-            embed.title = customTitle;
+            embed.title = custom_title;
         }
 
         const ironforgeURL = ironforgeBaseURL + id + "/";
@@ -75,9 +75,9 @@ export default new Command({
 
         embeds.push(forgeEmbed);
 
-        await interaction.followUp({ embeds: embeds }).then(() => {
-            setTimeout(() => (message as Message).delete(), 4000);
-        });
+        await interaction.reply({ embeds: embeds });
+        await interaction.followUp({ content: "Original message will be deleted!", ephemeral: true });
+        setTimeout(() => message.delete(), 4000);
     }
 })
 

@@ -11,9 +11,9 @@ export default new Command({
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)
-            return void interaction.followUp({ content: "❌ | No music is being played!" });
+            return await interaction.reply({ content: "❌ | No music is being played!", ephemeral: true });
 
         const paused = queue.setPaused(true);
-        return void interaction.followUp({ content: paused ? "⏸ | Paused!" : "❌ | Something went wrong!" });
+        await interaction.reply({ content: paused ? "⏸ | Paused!" : "❌ | Something went wrong!" });
     }
 })

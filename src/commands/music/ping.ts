@@ -10,7 +10,7 @@ export default new Command({
         const { guild } = interaction;
         const queue = player.getQueue(guild);
 
-        return void interaction.followUp({
+        await interaction.reply({
             embeds: [
                 {
                     title: "⏱️ | Latency",

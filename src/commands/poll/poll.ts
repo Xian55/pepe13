@@ -30,40 +30,35 @@ export default new Command({
 
         if (!raw_choices || raw_choices.indexOf(sep) == -1) {
             const embed = new MessageEmbed().setTitle(`📊 ${question}`);
-            await interaction.followUp({ embeds: [embed] }).then(async (msg: Message) => {
-                await msg.react('👍');
-                await msg.react('👎');
-            });
+            await interaction.reply({ embeds: [embed] });
+            const reply = await interaction.fetchReply() as Message;
+            await reply.react('👍');
+            await reply.react('👎');
+            return;
         }
-        else {
-            const choices = raw_choices.split(sep).map(e => e.trim());
-            if (choices.length > emojiAlphabet.length) {
-                return await interaction.followUp(
-                    {
-                        content: `Exceeded maximum available choices (${choices.length})! Please reduce the choice count (${choices.length} < ${emojiAlphabet.length}) .`,
-                        ephemeral: true
-                    })
-                    .then((reply: Message) => {
-                        setTimeout(() => {
-                            reply.delete();
-                        }, 2000);
-                    });
-            }
 
-            choices.forEach((option, i) => {
-                choices[i] = `${emojiAlphabet[i]} ${option}`
-            });
-
-            const embed = new MessageEmbed()
-                .setTitle(`📊 ${question}`)
-                .setDescription(choices.join('\n\n'));
-
-            await interaction.followUp({ embeds: [embed] })
-                .then(async (msg: Message) => {
-                    choices.forEach(async (_, i) => {
-                        await msg.react(emojiAlphabet[i]);
-                    })
+        const choices = raw_choices.split(sep).map(e => e.trim());
+        if (choices.length > emojiAlphabet.length) {
+            return await interaction.reply(
+                {
+                    content: `Exceeded maximum available choices (${choices.length})!` +
+                        ` Please reduce the choice count (${choices.length} < ${emojiAlphabet.length}) .`,
+                    ephemeral: true
                 });
         }
+
+        choices.forEach((choice, i) => {
+            choices[i] = `${emojiAlphabet[i]} ${choice}`
+        });
+
+        const embed = new MessageEmbed()
+            .setTitle(`📊 ${question}`)
+            .setDescription(choices.join('\n\n'));
+
+        await interaction.reply({ embeds: [embed] })
+        const reply = await interaction.fetchReply() as Message;
+        choices.forEach(async (_, i) => {
+            await reply.react(emojiAlphabet[i]);
+        });
     }
 })

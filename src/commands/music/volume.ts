@@ -18,17 +18,17 @@ export default new Command({
         const { guildId, options } = interaction;
         const queue = player.getQueue(guildId);
         if (!queue || !queue.playing)
-            return void interaction.followUp({ content: "❌ | No music is being played!" });
+            return await interaction.reply({ content: "❌ | No music is being played!", ephemeral: true });
 
         const vol = options.getInteger("amount");
         if (!vol)
-            return void interaction.followUp({ content: `🎧 | Current volume is **${queue.volume}**%!` });
+            return await interaction.reply({ content: `🎧 | Current volume is **${queue.volume}**%!` });
 
         if ((vol) < 0 || (vol) > 100)
-            return void interaction.followUp({ content: "❌ | Volume range must be 0-100" });
+            return await interaction.reply({ content: "❌ | Volume range must be 0-100", ephemeral: true });
 
         const success = queue.setVolume(vol);
-        return void interaction.followUp({
+        await interaction.reply({
             content: success ? `✅ | Volume set to **${vol}%**!` : "❌ | Something went wrong!"
         });
     }

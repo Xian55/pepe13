@@ -35,7 +35,7 @@ export default [new Event('voiceStateUpdate',
             if (!queue.connection)
                 await queue.connect(channel);
         } catch (e) {
-            void player.deleteQueue(guild.id);
+            player.deleteQueue(guild.id);
             console.log(e);
         }
 

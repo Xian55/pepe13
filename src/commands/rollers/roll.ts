@@ -1,3 +1,4 @@
+import { MessageEmbed } from "discord.js";
 import { Command } from "../../structures/Command";
 
 const defaultMin = 1;
@@ -29,12 +30,14 @@ export default new Command({
         let num = Math.floor(Math.random() * (max - min + 1)) + min;
         let div = (num % 10);
 
-        if (min == defaultMin && max == defaultMax && div > 0 && num / div == 11)
-            interaction.followUp({
-                content: num.toString(),
-                files: [dubzUrl]
-            });
-        else
-            interaction.followUp(num.toString());
+        const dubz = min == defaultMin && max == defaultMax && div > 0 && num / div == 11;
+
+        await interaction.reply({
+            content: num.toString(),
+            embeds: !dubz ? [] : [
+                new MessageEmbed()
+                    .setImage(dubzUrl)
+                    .setDescription("Dubzz")]
+        });
     }
 })

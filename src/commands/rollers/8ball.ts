@@ -28,6 +28,6 @@ export default new Command({
 	name: '8ball',
 	description: 'Get your answer from the magic ball',
 	run: async ({ interaction }) => {
-		interaction.followUp(table.sample());
+		await interaction.reply(table.sample());
 	}
 })

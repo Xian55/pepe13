@@ -8,10 +8,9 @@ const { commands } = client;
 export default [new Event('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
 
-    await interaction.deferReply().catch((err) => errorHandler('interactionCreate-commands', err));
     const command = commands.get(interaction.commandName)
     if (!command)
-        return interaction.followUp('You have used a non existing command')
+        return await interaction.reply({ content: "You have used a non existing command", ephemeral: true });
 
     command.run({
         interaction: interaction as ExtendedInteraction

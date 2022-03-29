@@ -16,11 +16,11 @@ const file = "it_be_monday.mp4";
 const mondayFile = path.resolve(process.env.user_path, file);
 
 async function task() {
-    const channel = await client.channels.fetch(process.env.plebek_post); // playground - 789904472863146047
+    const { channels } = client;
+    const channel = await channels.fetch(process.env.plebek_post) as TextChannel; // playground - 789904472863146047
     if (!channel) return;
-    const textChannel = channel as TextChannel;
 
-    textChannel.send(
+    channel.send(
         {
             files: [
                 {

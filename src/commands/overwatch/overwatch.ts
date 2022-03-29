@@ -37,15 +37,17 @@ export default new Command({
             if (!queue.connection)
                 await queue.connect(member.voice.channel);
         } catch {
-            void player.deleteQueue(guildId);
-            return void interaction.followUp({ content: "Could not join your voice channel!" });
+            player.deleteQueue(guildId);
+            return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
         }
 
-        await interaction.followUp({ content: "done" });
-        interaction.deleteReply();
-
         const filePath = path.join(dataPath, voicePath, key);
-        if (!fs.existsSync(filePath)) return;
+        if (!fs.existsSync(filePath))
+            return await interaction.reply({ content: "file does not exists!", ephemeral: true });
+
+        // slient reply
+        await interaction.deferReply();
+        await interaction.deleteReply();
 
         const raw = {
             engine: () => fs.createReadStream(filePath)

@@ -11,12 +11,12 @@ export default new Command({
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)
-            return void interaction.followUp({ content: "❌ | No music is being played!" });
+            return interaction.reply({ content: "❌ | No music is being played!", ephemeral: true });
 
         const progress = queue.createProgressBar();
         const perc = queue.getPlayerTimestamp();
 
-        return void interaction.followUp({
+        await interaction.reply({
             embeds: [
                 {
                     title: "Now Playing",
