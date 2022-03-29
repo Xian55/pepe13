@@ -7,7 +7,7 @@
     "start": "ts-node src/index.ts",
     "start:dev": "ts-node-dev src/index.ts",
     "start:prod": "ts-node dist/index.js",
-    "build": "tsc",
+    "build": "tsc --build --clean",
     "watch": "tsc -w"
   },
   "keywords": [],
