@@ -1,6 +1,5 @@
 import { Collection, Message } from "discord.js";
 import { FilterInt } from "../schemas/filter";
-import { ExtendedClient } from "../structures/Client";
 import { logHandler } from "../utils/logHandler";
 
 export class ChatFilter {
@@ -8,7 +7,7 @@ export class ChatFilter {
     handlers: Collection<string, string[]> = new Collection();
     words: Collection<string, string[]> = new Collection();
 
-    filters: Collection<string, IChatFilter> = new Collection();
+    filters: Collection<string, Filter> = new Collection();
 
     populate(doc: FilterInt) {
         const { Guild, Channel, Words, Handler } = doc;
@@ -24,13 +23,12 @@ export class ChatFilter {
     }
 }
 
-interface RunOptions {
-    client: ExtendedClient,
+interface FilterRunOptions {
     message: Message
 }
 
-type RunFunction = (options: RunOptions) => any;
+type RunFunction = (options: FilterRunOptions) => void;
 
-export interface IChatFilter {
+export interface Filter {
     run: RunFunction;
 }
