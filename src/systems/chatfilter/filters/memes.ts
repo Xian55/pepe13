@@ -1,7 +1,18 @@
 import { GuildEmoji, Message } from "discord.js";
 import { client } from "../../..";
 
-const memeTypes = ["image/jpeg", "image/png", "video/mp4", "image/gif", "image/webp"];
+const memeTypes = [
+    "image/jpeg",
+    "image/apng",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+    "video/mp4",
+    "video/webm",
+    "video/ogg"
+];
+
 var memeCoin: GuildEmoji;
 
 client.on("ready", () => {
