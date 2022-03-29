@@ -6,17 +6,17 @@ const regexLog = /https:\/\/classic\.warcraftlogs\.com\/reports\/(.*)\//;
 
 export default new Command({
     name: "endlog",
-    description: "Ends the live warcraftlog! Inserts ironforge link.",
+    description: "Ends the live warcraftlog. Inserts ironforge analyzer link.",
     options: [
         {
             name: "message_id",
-            description: `Message id with contains the warcraft log bot message.`,
+            description: `Message id which submitted by warcraft log webhook.`,
             type: "STRING",
             required: true
         },
         {
             name: "title",
-            description: `The title of the the event`,
+            description: `[Only used when report description was empty. The title of the the event]`,
             type: "STRING",
             required: false
         }
@@ -24,14 +24,15 @@ export default new Command({
     run: async ({ interaction, args }) => {
         const { channel } = interaction;
 
-        const title = args.getString("title") || "warcraftlog";
-
         const messageId = args.getString("message_id");
         const message = await channel.messages.fetch(messageId);
         if (!message) return;
 
+        const date = new Date(message.createdTimestamp);
+        const customTitle = args.getString("title") || `${formatDate(date)} log`;
+
         await interaction
-            .followUp({ content: 'ironforge link added to the log!', ephemeral: true })
+            .followUp({ content: 'Live log ended. Safe to open Ironforge link!', ephemeral: true })
             .then((reply) => {
                 setTimeout(() => (reply as Message).delete(), 4000);
             });
@@ -42,7 +43,8 @@ export default new Command({
             return interaction
                 .followUp({ content: "not suported", ephemeral: true });
 
-        const { url, description } = embeds[0];
+        const embed = embeds[0];
+        const { url, description } = embed;
 
         if (!regexLog.test(url))
             return interaction
@@ -53,22 +55,22 @@ export default new Command({
 
         if (!id)
             return interaction
-                .followUp({ content: "format change?!", ephemeral: true });;
+                .followUp({ content: "format change?!", ephemeral: true });
 
-        embeds[0].thumbnail = null;
 
-        if (embeds[0].title.length == 0) {
-            if (description && description.length == 0) {
-                embeds[0].title = title;
-            }
-            else {
-                embeds[0].title = description;
-            }
+        embed.thumbnail = null;
+
+        if (description) {
+            embed.title = description;
+            embed.description = null;
+        }
+        else {
+            embed.title = customTitle;
         }
 
         const ironforgeURL = ironforgeBaseURL + id + "/";
         const forgeEmbed = new MessageEmbed()
-            .setTitle("consumable usage")
+            .setTitle(`${embed.title} consumables`)
             .setURL(ironforgeURL);
 
         embeds.push(forgeEmbed);
@@ -78,3 +80,13 @@ export default new Command({
         });
     }
 })
+
+function formatDate(date: Date) {
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : '0' + month;
+
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : '0' + day;
+
+    return `${month} ${day}`;
+}
