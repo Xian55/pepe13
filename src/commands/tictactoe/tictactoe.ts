@@ -3,25 +3,36 @@ import { Command } from "../../structures/Command";
 
 export default new Command({
     name: "tictactoe",
-    description: "Initiates a TicTacToe game!",
+    description: "Initiates a Tic-tac-toe game!",
     options: [
         {
             name: "opponent",
-            description: `Who you want to challange!`,
+            description: "Who you want to challange!",
             type: "USER",
             required: true
         },
     ],
     run: async ({ interaction, args }) => {
-        const owner = interaction.member;
-        const user = args.getUser("opponent");
-        const opponent = await interaction.guild.members.fetch({ user: user });
+        const { member, guild } = interaction;
+        const opponent = await guild.members
+            .fetch({ user: args.getUser("opponent") });
 
         const components = [
             new MessageActionRow().addComponents(
-                new MessageButton({ disabled: true, style: "SUCCESS", label: owner.displayName, customId: "tttowner" }),
-                new MessageButton({ disabled: true, style: "SECONDARY", label: "vs", customId: "tttvs" }),
-                new MessageButton({ disabled: true, style: "DANGER", label: opponent.displayName, customId: "tttopponent" }),
+                new MessageButton({
+                    disabled: true, style: "SUCCESS",
+                    label: member.displayName,
+                    customId: "tttowner"
+                }),
+                new MessageButton({
+                    disabled: true, style: "SECONDARY",
+                    label: "vs", customId: "tttvs"
+                }),
+                new MessageButton({
+                    disabled: true, style: "DANGER",
+                    label: opponent.displayName,
+                    customId: "tttopponent"
+                }),
             ),
             new MessageActionRow().addComponents(
                 new MessageButton({ label: "_", style: "SECONDARY", customId: "ttt10" }),
@@ -41,7 +52,7 @@ export default new Command({
         ];
 
         interaction.editReply({
-            content: `${owner} challenged ${opponent} in a TicTacToe game!`,
+            content: `${member} challenged ${opponent} in a Tic-tac-toe game!`,
             components: components
         })
     }
