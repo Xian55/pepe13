@@ -1,25 +1,23 @@
-import { GuildMember, Message, MessageActionRow, MessageButton, MessageComponentInteraction } from "discord.js";
+import { GuildMember, Message, MessageButton } from "discord.js";
 import { Event } from "../structures/Events";
 import { errorHandler } from "../utils/errorHandler";
 
 export default [new Event('interactionCreate', async (interaction) => {
-    if (interaction.isMessageComponent() &&
-        interaction.customId.startsWith("ttt")) {
-        await updateGrid(interaction);
-    }
-})]
+    if (!interaction.isMessageComponent()) return;
 
-const updateGrid = async function (interaction: MessageComponentInteraction) {
-    const message = interaction.message as Message;
+    const { customId } = interaction;
+    if (!customId.startsWith("ttt")) return;
+
+    const { message, member } = <{ message: Message, member: GuildMember }>interaction;
+    const { displayName } = member;
 
     let xs = 0, os = 0;
     let owner = "";
     let opponent = "";
 
-    const member = interaction.member as GuildMember;
-    const { displayName } = member;
+    const { components } = message;
 
-    message.components.forEach((actionRow: MessageActionRow, y) => {
+    components.forEach((actionRow, y) => {
         actionRow.components.forEach((button: MessageButton) => {
             const { customId, label } = button;
             // header
@@ -39,34 +37,27 @@ const updateGrid = async function (interaction: MessageComponentInteraction) {
     if (![owner, opponent].includes(displayName)) {
         return await interaction.reply(
             {
-                content: "Respect others game :pray:. You are not invited to this match!",
+                content: "Respect others game :pray:. You're not invited!",
                 ephemeral: true
             })
     }
 
     const xs_turn = xs <= os;
-    const y = parseInt(interaction.customId[3]);
-    const x = parseInt(interaction.customId[4]);
-
-    const buttonPressed = message.components[y].components[x] as MessageButton;
+    const y = parseInt(customId[3]); // tttyx
+    const x = parseInt(customId[4]); // tttyx
+    const buttonPressed = components[y].components[x] as MessageButton;
 
     if (buttonPressed.label !== '_')
-        return await interaction.reply({ content: "Someone already moved there!", ephemeral: true });
+        return await interaction.reply({ content: "Somebody already moved there :eyes:!", ephemeral: true });
 
-    if (xs_turn && displayName != owner) {
-        return await interaction.reply({ content: `Wait for ${owner} turn!`, ephemeral: true })
-    }
-    else if (!xs_turn && displayName != opponent) {
-        return await interaction.reply({ content: `Wait for ${opponent} turn!`, ephemeral: true })
-    }
+    if (xs_turn && displayName != owner)
+        return await interaction.reply({ content: `Wait for ${owner} turn :timer:!`, ephemeral: true })
+    else if (!xs_turn && displayName != opponent)
+        return await interaction.reply({ content: `Wait for ${opponent} turn :timer:!`, ephemeral: true })
 
     buttonPressed.label = xs_turn ? 'X' : 'O';
     buttonPressed.style = xs_turn ? "SUCCESS" : "DANGER";
 
-    const styleToNumber = style => style === "SECONDARY" ? 2 : style === "SUCCESS" ? 3 : 4;
-
-    buttonPressed.setStyle(styleToNumber(buttonPressed.style));
-
-    await message.edit({ components: message.components });
+    await message.edit({ components: components });
     await interaction.deferUpdate();
-}
+})]
