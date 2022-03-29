@@ -7,21 +7,35 @@ export default new Command({
     options: [
         {
             name: "opponent",
-            description: "Who you want to challange!",
+            description: "Who's your opponent?",
             type: "USER",
             required: true
         },
+        {
+            name: "opponent_starts",
+            description: "The oppontent should start the game?",
+            type: "BOOLEAN",
+            required: false
+        }
     ],
     run: async ({ interaction, args }) => {
         const { member, guild } = interaction;
         const opponent = await guild.members
             .fetch({ user: args.getUser("opponent") });
 
+        let first = member.displayName;
+        let second = opponent.displayName;
+        const opponent_starts = args.getBoolean("opponent_starts") || false;
+        if (opponent_starts) {
+            first = opponent.displayName;
+            second = member.displayName;
+        }
+
         const components = [
             new MessageActionRow().addComponents(
                 new MessageButton({
                     disabled: true, style: "SUCCESS",
-                    label: member.displayName,
+                    label: first,
                     customId: "tttowner"
                 }),
                 new MessageButton({
@@ -30,7 +44,7 @@ export default new Command({
                 }),
                 new MessageButton({
                     disabled: true, style: "DANGER",
-                    label: opponent.displayName,
+                    label: second,
                     customId: "tttopponent"
                 }),
             ),
@@ -52,7 +66,7 @@ export default new Command({
         ];
 
         interaction.editReply({
-            content: `${member} challenged ${opponent} in a Tic-tac-toe game!`,
+            content: `${member} challenged ${opponent} in a Tic-tac-toe game! ${opponent_starts ? `\nMake your move, ${first}` : ""}`,
             components: components
         })
     }
