@@ -21,15 +21,16 @@ export default new Command({
             required: false,
         }
     ],
-    run: async ({ interaction, args }) => {
-        const term = args.getString("query");
+    run: async ({ interaction }) => {
+        const { options } = interaction;
+        const term = options.getString("query");
         UrbanDictionary.define(term, (error: Error, entries) => {
             if (error) {
                 console.error(error.message);
                 return void interaction.followUp(error.message);
             }
 
-            const order = Math.min(args.getInteger("order"), entries.length - 1) || defaultOrder;
+            const order = Math.min(options.getInteger("order"), entries.length - 1) || defaultOrder;
             const entry = entries[order];
             const author: EmbedAuthorData = {
                 name: entry.author,

@@ -21,15 +21,15 @@ export default new Command({
             required: false
         }
     ],
-    run: async ({ interaction, args }) => {
-        const { channel } = interaction;
+    run: async ({ interaction }) => {
+        const { options, channel } = interaction;
 
-        const messageId = args.getString("message_id");
+        const messageId = options.getString("message_id");
         const message = await channel.messages.fetch(messageId);
         if (!message) return;
 
         const date = new Date(message.createdTimestamp);
-        const customTitle = args.getString("title") || `${formatDate(date)} log`;
+        const customTitle = options.getString("title") || `${formatDate(date)} log`;
 
         await interaction
             .followUp({ content: 'Live log ended. Safe to open Ironforge link!', ephemeral: true })

@@ -21,9 +21,10 @@ export default new Command({
             required: false,
         }
     ],
-    run: async ({ interaction, args }) => {
-        let min = args.getInteger("min") || defaultMin;
-        let max = args.getInteger("max") || defaultMax;
+    run: async ({ interaction }) => {
+        const { options } = interaction;
+        let min = options.getInteger("min") || defaultMin;
+        let max = options.getInteger("max") || defaultMax;
 
         let num = Math.floor(Math.random() * (max - min + 1)) + min;
         let div = (num % 10);

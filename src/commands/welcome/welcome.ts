@@ -12,11 +12,11 @@ export default new Command({
             required: false
         },
     ],
-    run: async ({ interaction, args }) => {
-        const { guild, channel, member } = interaction;
+    run: async ({ interaction }) => {
+        const { options, guild, channel, member } = interaction;
         if (!channel.isText()) return;
 
-        const link = args.getString("link") || "";
+        const link = options.getString("link") || "";
 
         if (link.length == 0) {
             await Schema.findOneAndDelete(

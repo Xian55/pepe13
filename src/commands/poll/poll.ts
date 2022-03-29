@@ -21,12 +21,14 @@ export default new Command({
             required: false
         }
     ],
-    run: async ({ interaction, args }) => {
+    run: async ({ interaction }) => {
 
-        const question = args.getString("question");
-        const choices = args.getString("choices");
+        const { options } = interaction;
 
-        if (!choices || choices.indexOf(sep) == -1) {
+        const question = options.getString("question");
+        const raw_choices = options.getString("choices");
+
+        if (!raw_choices || raw_choices.indexOf(sep) == -1) {
             const embed = new MessageEmbed().setTitle(`📊 ${question}`);
             await interaction.followUp({ embeds: [embed] }).then(async (msg: Message) => {
                 await msg.react('👍');
@@ -34,11 +36,11 @@ export default new Command({
             });
         }
         else {
-            const options = choices.split(sep).map(e => e.trim());
-            if (options.length > emojiAlphabet.length) {
+            const choices = raw_choices.split(sep).map(e => e.trim());
+            if (choices.length > emojiAlphabet.length) {
                 return await interaction.followUp(
                     {
-                        content: `Exceeded maximum available choices (${options.length})! Please reduce the choice count (${options.length} < ${emojiAlphabet.length}) .`,
+                        content: `Exceeded maximum available choices (${choices.length})! Please reduce the choice count (${choices.length} < ${emojiAlphabet.length}) .`,
                         ephemeral: true
                     })
                     .then((reply: Message) => {
@@ -48,17 +50,17 @@ export default new Command({
                     });
             }
 
-            options.forEach((option, i) => {
-                options[i] = `${emojiAlphabet[i]} ${option}`
+            choices.forEach((option, i) => {
+                choices[i] = `${emojiAlphabet[i]} ${option}`
             });
 
             const embed = new MessageEmbed()
                 .setTitle(`📊 ${question}`)
-                .setDescription(options.join('\n\n'));
+                .setDescription(choices.join('\n\n'));
 
             await interaction.followUp({ embeds: [embed] })
                 .then(async (msg: Message) => {
-                    options.forEach(async (_, i) => {
+                    choices.forEach(async (_, i) => {
                         await msg.react(emojiAlphabet[i]);
                     })
                 });

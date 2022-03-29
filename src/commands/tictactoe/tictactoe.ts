@@ -18,14 +18,14 @@ export default new Command({
             required: false
         }
     ],
-    run: async ({ interaction, args }) => {
-        const { member, guild } = interaction;
+    run: async ({ interaction }) => {
+        const { options, member, guild } = interaction;
         const opponent = await guild.members
-            .fetch({ user: args.getUser("opponent") });
+            .fetch({ user: options.getUser("opponent") });
 
         let first = member.displayName;
         let second = opponent.displayName;
-        const opponent_starts = args.getBoolean("opponent_starts") || false;
+        const opponent_starts = options.getBoolean("opponent_starts") || false;
         if (opponent_starts) {
             first = opponent.displayName;
             second = member.displayName;

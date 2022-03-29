@@ -14,13 +14,9 @@ export default new Command({
             required: false
         },
     ],
-    run: async ({ interaction, args }) => {
-        const { channel } = interaction;
-
-        if (!channel.isText())
-            return;
-
-        const amount = Math.min(args.getInteger("amount"), 100) || defaultAmount;
+    run: async ({ interaction }) => {
+        const { channel, options } = interaction;
+        const amount = Math.min(options.getInteger("amount"), 100) || defaultAmount;
 
         const textChannel = channel as TextChannel;
         await textChannel.bulkDelete(amount);
