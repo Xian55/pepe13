@@ -90,7 +90,12 @@ export class ExtendedClient extends Client {
     async start() {
         await initChatFilter(this);
 
-        this.registerModules()
+        const deploy = process.env.deploy.toLowerCase() === 'true';
+        const clean = process.env.clean.toLowerCase() === 'true';
+
+        if (deploy)
+            this.manageModules(clean);
+
         this.login(process.env.botToken)
     }
 
@@ -98,33 +103,36 @@ export class ExtendedClient extends Client {
         return (await import(filePath))?.default;
     }
 
-    async registerCommands({ commands, guildId }: RegisterCommandsOptions) {
+    async registerCommands(clean: boolean, { commands, guildId }: RegisterCommandsOptions) {
         if (guildId) {
             this.guilds.cache.get(guildId)?.commands.set(commands);
-            logHandler.log("info", `Registered ${commands.length} commands to ${guildId}`);
+            logHandler.log("info", `${clean ? "Removed" : `Registered ${commands.length}`} commands at ${guildId}`);
         }
         else {
             this.application.commands.set(commands);
-            logHandler.log("info", `Registered ${commands.length} global commands`);
+            logHandler.log("info", `${clean ? "Removed" : `Registered ${commands.length}`} global commands`);
         }
     }
 
-    async registerModules() {
+    async manageModules(clean: boolean) {
         const slashCommands: ApplicationCommandDataResolvable[] = [];
-        const commandFiles = await globPromise(`${__dirname}/../commands/*/*{.ts,.js}`);
-        //console.log({commandFiles});
 
-        commandFiles.forEach(async filePath => {
-            const command: CommandType = await this.importFile(filePath);
-            if (!command.name) return;
-            //console.log(command);
+        if (!clean) {
+            const commandFiles = await globPromise(`${__dirname}/../commands/*/*{.ts,.js}`);
+            //console.log({commandFiles});
 
-            this.commands.set(command.name, command);
-            slashCommands.push(command);
-        });
+            commandFiles.forEach(async filePath => {
+                const command: CommandType = await this.importFile(filePath);
+                if (!command.name) return;
+                //console.log(command);
+
+                this.commands.set(command.name, command);
+                slashCommands.push(command);
+            });
+        }
 
         this.on("ready", () => {
-            this.registerCommands({
+            this.registerCommands(clean, {
                 commands: slashCommands,
                 guildId: process.env.guildId
             });

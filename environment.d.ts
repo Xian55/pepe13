@@ -4,6 +4,8 @@ declare global {
             botToken: string;
             API_KEY_IMGUR: string;
             guildId: string;
+            clean: string;
+            deploy: string;
             MONGO_URI: string;
             environment: "dev" | "prod" | "debug";
             plebek_post: string;
