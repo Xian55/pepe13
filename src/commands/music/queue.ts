@@ -1,13 +1,12 @@
 import { Command } from "../../structures/Command";
 import { client } from "../..";
 
-const { player } = client;
-
 export default new Command({
     name: 'queue',
     description: "See the queue",
     run: async ({ interaction }) => {
         const { guildId } = interaction;
+        const { player } = client;
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)

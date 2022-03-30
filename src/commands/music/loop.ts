@@ -2,8 +2,6 @@ import { Command } from "../../structures/Command";
 import { client } from "../..";
 import { QueueRepeatMode } from "discord-player";
 
-const { player } = client;
-
 export default new Command({
     name: 'loop',
     description: 'Sets loop mode',
@@ -35,6 +33,7 @@ export default new Command({
     ],
     run: async ({ interaction }) => {
         const { guildId, options } = interaction;
+        const { player } = client;
         const queue = player.getQueue(guildId);
 
         if (!queue || !queue.playing)

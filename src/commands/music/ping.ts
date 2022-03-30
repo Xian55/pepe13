@@ -1,13 +1,12 @@
 import { Command } from "../../structures/Command";
 import { client } from "../..";
 
-const { player } = client;
-
 export default new Command({
     name: 'ping',
     description: 'replies with pong',
     run: async ({ interaction }) => {
         const { guild } = interaction;
+        const { player } = client;
         const queue = player.getQueue(guild);
 
         await interaction.reply({

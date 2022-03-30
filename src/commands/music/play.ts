@@ -2,8 +2,6 @@ import { Command } from "../../structures/Command";
 import { client } from "../..";
 import { QueryType } from "discord-player";
 
-const { player } = client;
-
 export default new Command({
     name: 'play',
     description: 'Plays a song',
@@ -26,7 +24,7 @@ export default new Command({
             guildId } = interaction;
 
         const query = options.getString("query");
-
+        const { player } = client;
         const searchResult = await player
             .search(query, {
                 requestedBy: user,
