@@ -10,7 +10,6 @@ export default {
         if (message.author.bot) return;
 
         const { content } = message;
-        //const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\//im;
         const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\/(.*)/im;
         if (!regex.test(content)) return;
 
@@ -18,8 +17,6 @@ export default {
         const spoiler = content != safeUrl;
 
         //console.log(`processing ${safeUrl}`);
-
-        //const id = safeUrl.split('/').pop();
 
         const match = safeUrl.match(regex);
         const id = match[3];
