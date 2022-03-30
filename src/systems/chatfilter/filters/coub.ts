@@ -9,8 +9,9 @@ export default {
     async run({ message }: { message: Message }) {
         if (message.author.bot) return;
 
-        const { content, channel } = message;
-        const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\//im;
+        const { content } = message;
+        //const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\//im;
+        const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\/(.*)/im;
         if (!regex.test(content)) return;
 
         const safeUrl = content.replace(/[||]/g, '');
@@ -18,11 +19,15 @@ export default {
 
         //console.log(`processing ${safeUrl}`);
 
-        const id = safeUrl.split('/').pop();
+        //const id = safeUrl.split('/').pop();
+
+        const match = safeUrl.match(regex);
+        const id = match[3];
+
         const fileName = (spoiler ? 'SPOILER_' : '') + id + '.mp4';
         const savePath = path.join(process.env.tmp_path, fileName);
 
-        const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 12`;
+        const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 10`;
         await execAsync(cmd);
 
         if (!fs.existsSync(savePath)) {
@@ -30,18 +35,14 @@ export default {
             return;
         }
 
-        await channel.send(
-            {
-                content: (spoiler ? '**NSFW** - ' : '') + content,
-                files: [
-                    {
-                        attachment: savePath,
-                        name: fileName,
-                    }
-                ]
-            });
-
-        setTimeout(() => message.delete(), 1000);
+        await message.reply({
+            files: [
+                {
+                    attachment: savePath,
+                    name: fileName,
+                }
+            ]
+        });
 
         deleteFile(savePath);
     }
