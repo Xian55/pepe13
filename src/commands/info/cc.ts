@@ -1,11 +1,18 @@
-import { TextChannel } from "discord.js";
+import { Permissions, TextChannel } from "discord.js";
 import { Command } from "../../structures/Command";
 
-const defaultAmount = 2;
+const defaultAmount = 1;
 
 export default new Command({
     name: "cc",
     description: "Clears messages",
+    userPermissions: [
+        Permissions.FLAGS.MANAGE_MESSAGES
+    ],
+    botPermissions: [
+        Permissions.FLAGS.VIEW_CHANNEL,
+        Permissions.FLAGS.MANAGE_MESSAGES
+    ],
     options: [
         {
             name: "amount",
@@ -21,6 +28,6 @@ export default new Command({
         const textChannel = channel as TextChannel;
         const removed = await textChannel.bulkDelete(amount);
 
-        await interaction.reply({ content: `Removed ${removed.size} messages.`, ephemeral: true });
+        await interaction.reply({ content: `Removed **${removed.size}** message(s).`, ephemeral: true });
     }
 })

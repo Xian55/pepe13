@@ -126,6 +126,10 @@ export class ExtendedClient extends Client {
                 if (!command.name) return;
                 //console.log(command);
 
+                // only for guild based permissions
+                //if (command.userPermissions)
+                //    command.defaultPermission = false;
+
                 this.commands.set(command.name, command);
                 slashCommands.push(command);
             });
