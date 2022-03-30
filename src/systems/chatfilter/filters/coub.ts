@@ -10,21 +10,22 @@ export default {
         if (message.author.bot) return;
 
         const { content } = message;
-        const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\/(.*)/im;
+        const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\/([^\s]+)/im;
         if (!regex.test(content)) return;
 
-        const safeUrl = content.replace(/[||]/g, '');
-        const spoiler = content != safeUrl;
+        const safeContent = content.replace(/[||]/g, '');
+        const spoiler = content != safeContent;
 
         //console.log(`processing ${safeUrl}`);
 
-        const match = safeUrl.match(regex);
+        const match = content.match(regex);
+        const url = match[0];
         const id = match[3];
 
         const fileName = (spoiler ? 'SPOILER_' : '') + id + '.mp4';
         const savePath = path.join(process.env.tmp_path, fileName);
 
-        const cmd = `coub-dl -i ${safeUrl} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 10`;
+        const cmd = `coub-dl -i ${url} -o ${savePath} --format mp4 --scale 400 --loop 10 --time 10`;
         await execAsync(cmd);
 
         if (!fs.existsSync(savePath)) {
