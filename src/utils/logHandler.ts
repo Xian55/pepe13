@@ -1,5 +1,5 @@
 import { createLogger, format, transports, config } from "winston";
-const { combine, timestamp, colorize, printf } = format;
+const { combine, timestamp, printf } = format;
 
 export const logHandler = createLogger({
     levels: config.npm.levels,
@@ -7,10 +7,9 @@ export const logHandler = createLogger({
     transports: [new transports.Console()],
     format: combine(
         timestamp({
-            format: "YYYY-MM-DD HH:mm:ss",
+            format: "HH:mm:ss",
         }),
-        colorize(),
-        printf(({ level, timestamp, message }) => `${level}: ${[timestamp]}: ${message}`)
+        printf(({ level, timestamp, message }) => `${level} ${[timestamp]} ${message}`)
     ),
     exitOnError: false,
 });
