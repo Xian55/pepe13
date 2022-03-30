@@ -4,7 +4,6 @@ import { Track, RawTrackData } from "discord-player";
 import path from "path";
 import fs from "fs";
 
-const { player } = client;
 const dataPath = path.resolve(process.env.data_path, "darkest");
 const mapFile = "map.json";
 const voicePath = "voice-data";
@@ -24,7 +23,7 @@ export default new Command({
         const { options, member, guild, guildId, channel } = interaction;
         const query = options.getString("query");
         const { key, description } = findBestQuote(query);
-
+        const { player } = client;
         const queue = player.createQueue(guild, {
             metadata: channel,
             autoSelfDeaf: false,
