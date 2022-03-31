@@ -3,6 +3,7 @@ import { client } from "../..";
 import { Track, RawTrackData } from "discord-player";
 import path from "path";
 import fs from "fs";
+import { Permissions } from "discord.js";
 
 const dataPath = path.resolve(process.env.data_path, "overwatch");
 const mapFile = "map.json";
@@ -11,6 +12,9 @@ const voicePath = "voice-data";
 export default new Command({
     name: 'overwatch',
     description: 'Returns with a Overwatch quote',
+    botPermissions: [
+        Permissions.FLAGS.CONNECT
+    ],
     options: [
         {
             name: 'query',

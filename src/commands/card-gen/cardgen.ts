@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoice, Permissions } from "discord.js";
+import { ApplicationCommandOptionChoice } from "discord.js";
 import path from "path";
 import { loadImage, createCanvas } from "canvas"
 import { CanvasTextWrapper } from "canvas-text-wrapper"
@@ -20,9 +20,6 @@ for (const key in CardTypes) {
 export default new Command({
     name: "cardgen",
     description: "Generates a yu-gi-oh card",
-    botPermissions: [
-        Permissions.FLAGS.VIEW_CHANNEL
-    ],
     options: [
         {
             name: "type",

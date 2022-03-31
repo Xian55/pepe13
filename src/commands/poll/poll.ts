@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Permissions, Message, MessageEmbed } from "discord.js";
 import { Command } from "../../structures/Command";
 
 const emojiAlphabet = [...'🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿'];
@@ -7,6 +7,10 @@ const sep = "+";
 export default new Command({
     name: "poll",
     description: "Creates a poll",
+    botPermissions: [
+        Permissions.FLAGS.ADD_REACTIONS,
+        Permissions.FLAGS.SEND_MESSAGES
+    ],
     options: [
         {
             name: "question",

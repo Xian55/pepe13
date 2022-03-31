@@ -1,5 +1,8 @@
-import { GuildEmoji, Message } from "discord.js";
+import { Permissions, GuildEmoji, Message, TextChannel } from "discord.js";
+import path from "path";
 import { client } from "../../..";
+import { hasPermission } from "../../../utils/hasPermission";
+import { logHandler } from "../../../utils/logHandler";
 
 const memeTypes = [
     "image/jpeg",
@@ -21,8 +24,15 @@ client.on("ready", () => {
 
 export default {
     async run({ message }: { message: Message }) {
-        if (shouldReact(message))
+        if (shouldReact(message)) {
+            const { guild, channel } = message;
+            if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.ADD_REACTIONS])) {
+                logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
+                return;
+            }
+
             message.react(memeCoin.id);
+        }
     }
 }
 

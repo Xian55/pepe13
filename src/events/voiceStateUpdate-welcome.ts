@@ -1,12 +1,13 @@
-import { VoiceState } from "discord.js";
+import { Permissions, VoiceState } from "discord.js";
 import { client } from "..";
 import { Event } from "../structures/Events";
 import { logHandler } from "../utils/logHandler";
+import { hasPermission } from "../utils/hasPermission";
 
 import { RawTrackData, Track } from "discord-player";
 import Schema from "../schemas/welcome";
 
-const { player } = client;
+const botPermissions = [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.CONNECT];
 
 export default [new Event('voiceStateUpdate',
     async (oldState: VoiceState, newState: VoiceState) => {
@@ -17,12 +18,18 @@ export default [new Event('voiceStateUpdate',
 
         const { guild, id, channel, member } = newState
 
+        if (!hasPermission(guild.me, channel, botPermissions)) {
+            logHandler.log("error", `Unable to join **${channel.name}** missing permission!`);
+            return;
+        }
+
         const data = await Schema.findOne(
             { Guild: guild.id, Member: id }
         );
         if (!data) return;
         const { Link } = data;
 
+        const { player } = client;
         const queue = player.createQueue(guild, {
             metadata: channel,
             autoSelfDeaf: false,

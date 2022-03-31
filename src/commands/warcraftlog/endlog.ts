@@ -1,5 +1,6 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Permissions, Message, MessageEmbed, TextChannel } from "discord.js";
 import { Command } from "../../structures/Command";
+import { hasPermission } from "../../utils/hasPermission";
 
 const ironforgeBaseURL = "https://ironforge.pro/analyzer/report/"
 const regexLog = /https:\/\/classic\.warcraftlogs\.com\/reports\/(.*)\//;
@@ -22,7 +23,7 @@ export default new Command({
         }
     ],
     run: async ({ interaction }) => {
-        const { options, channel } = interaction;
+        const { guild, options, channel } = interaction;
 
         const messageId = options.getString("message_id");
         let message: Message;
@@ -77,7 +78,13 @@ export default new Command({
 
         await interaction.reply({ embeds: embeds });
         await interaction.followUp({ content: "Original message will be deleted!", ephemeral: true });
-        setTimeout(() => message.delete(), 4000);
+
+        if (hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.MANAGE_MESSAGES])) {
+            setTimeout(() => message.delete(), 4000);
+        }
+        else {
+            await interaction.followUp({ content: "Don't have permission to delete the original message!", ephemeral: true });
+        }
     }
 })
 

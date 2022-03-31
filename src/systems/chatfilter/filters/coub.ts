@@ -1,17 +1,25 @@
 import path from "path";
 import fs from "fs";
 import util from 'util';
-import { Message } from "discord.js";
+import { Permissions, Message, TextChannel } from "discord.js";
 import ChildProcess from "child_process";
+import { logHandler } from "../../../utils/logHandler";
+import { hasPermission } from "../../../utils/hasPermission";
+
 const exec = util.promisify(ChildProcess.exec);
 
 export default {
     async run({ message }: { message: Message }) {
         if (message.author.bot) return;
+        const { guild, channel, content } = message;
 
-        const { content } = message;
         const regex = /https:\/\/(www\.|)coub\.com\/(view|embed)\/([^\s]+)/im;
         if (!regex.test(content)) return;
+
+        if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.SEND_MESSAGES])) {
+            logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
+            return;
+        }
 
         const safeContent = content.replace(/[||]/g, '');
         const spoiler = content != safeContent;

@@ -1,3 +1,4 @@
+import { Permissions } from "discord.js";
 import { Command } from "../../structures/Command";
 import { client } from "../..";
 import { Track, RawTrackData } from "discord-player";
@@ -11,6 +12,9 @@ const voicePath = "voice-data";
 export default new Command({
     name: 'dd',
     description: 'Returns with a Darkest Dungeon quote',
+    botPermissions: [
+        Permissions.FLAGS.CONNECT
+    ],
     options: [
         {
             name: 'query',

@@ -10,7 +10,6 @@ export default new Command({
         Permissions.FLAGS.MANAGE_MESSAGES
     ],
     botPermissions: [
-        Permissions.FLAGS.VIEW_CHANNEL,
         Permissions.FLAGS.MANAGE_MESSAGES
     ],
     options: [
