@@ -5,7 +5,7 @@ import { ApplicationCommandOptionChoice } from "discord.js";
 
 const { chatFilter } = client;
 
-let handlerChoices: ApplicationCommandOptionChoice[] = [];
+const handlerChoices: ApplicationCommandOptionChoice[] = [];
 for (let element of chatFilter.filters) {
     let choice = { name: element[0], value: element[0] };
     handlerChoices.push(choice);

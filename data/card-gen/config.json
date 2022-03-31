@@ -1,0 +1,9 @@
+{
+    "separator": "@",
+    "templateFolder": "./template",
+    "outputFolder": "./server_data",
+    "titleFont": "30px Impact",
+    "statFont": "13px Impact",
+    "starAsset": "star.png",
+    "notFoundAsset": "not_found.png"
+}
