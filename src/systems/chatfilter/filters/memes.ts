@@ -16,7 +16,7 @@ const memeTypes = [
     "video/ogg"
 ];
 
-var memeCoin: GuildEmoji;
+var memeCoin: GuildEmoji = null;
 
 client.on("ready", () => {
     memeCoin = client.emojis.cache.find(emoji => emoji.name === "memecoin");
@@ -24,7 +24,7 @@ client.on("ready", () => {
 
 export default {
     async run({ message }: { message: Message }) {
-        if (shouldReact(message)) {
+        if (memeCoin && shouldReact(message)) {
             const { guild, channel } = message;
             if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.ADD_REACTIONS])) {
                 logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
