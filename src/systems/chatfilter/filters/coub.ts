@@ -4,6 +4,7 @@ import util from 'util';
 import { Permissions, Message, TextChannel } from "discord.js";
 import ChildProcess from "child_process";
 import { logHandler } from "../../../utils/logHandler";
+import { errorHandler } from "../../../utils/errorHandler";
 import { hasPermission } from "../../../utils/hasPermission";
 
 const exec = util.promisify(ChildProcess.exec);
@@ -37,7 +38,7 @@ export default {
         await execAsync(cmd);
 
         if (!fs.existsSync(savePath)) {
-            console.warn(`${savePath} not exists!`);
+            logHandler.log("error", `${path.basename(__filename)} ${savePath} not exists!`);
             return;
         }
 
@@ -61,13 +62,13 @@ async function execAsync(cmd: string) {
         const { stdout, stderr } = await exec(cmd);
         //console.log(`[coub-dl] execAsync-finish`);
         if (stdout.length > 0)
-            console.log('[coub-dl] stdout:', stdout);
+            logHandler.log("info", `[coub-dl] stdout: ${stdout}`);
 
         if (stderr.length > 0)
-            console.log('[coub-dl] stderr:', stderr);
+            logHandler.log("error", `[coub-dl] stderr: ${stderr}`);
     }
     catch (e) {
-        console.log('[coub-dl] error:', e); // should contain code (exit code) and signal (that caused the termination).
+        errorHandler("[coub-dl] error", e);
     }
 }
 
@@ -75,8 +76,8 @@ function deleteFile(path: string) {
     if (fs.existsSync(path)) {
         try {
             fs.unlinkSync(path);
-        } catch (err) {
-            console.error(err);
+        } catch (e) {
+            errorHandler("delete file", e);
         }
     }
 }
