@@ -1,4 +1,3 @@
-//import * as Sentry from "@sentry/node";
 import { logHandler } from "./logHandler";
 
 export const errorHandler = (context: string, err: unknown): void => {
@@ -8,6 +7,4 @@ export const errorHandler = (context: string, err: unknown): void => {
         "error",
         JSON.stringify({ errorMessage: error.message, errorStack: error.stack })
     );
-
-    //Sentry.captureException(error);
 };
