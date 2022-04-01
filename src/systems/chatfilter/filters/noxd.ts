@@ -23,15 +23,15 @@ export default {
             }
         });
 
-        if (shouldDelete) {
-            if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.MANAGE_MESSAGES])) {
-                logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
-                return;
-            }
+        if (!shouldDelete) return;
 
-            message.delete().catch(() => { });
-            const reply = await channel.send(imgUrl);
-            setTimeout(() => reply.delete(), 5000);
+        if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.MANAGE_MESSAGES])) {
+            logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
+            return;
         }
+
+        const reply = await message.reply(imgUrl);
+        await message.delete();
+        setTimeout(() => reply.delete(), 5000);
     }
 }
