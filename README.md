@@ -16,7 +16,7 @@ Discord.js v13 bot written in TypeScript.
 1. Poll generator
 1. Roll and 8Magic ball
 1. Urban Dictionary
-1. WarcraftLog Live Log finished
+1. WarcraftLog Live Log finalizer.
 1. Welcomer
 
 ## Build Requirements
