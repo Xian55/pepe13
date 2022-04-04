@@ -9,7 +9,7 @@ Make a copy of the `.env.sample` file to `.env` and populate the following field
 ## Install dependencies
 
 ```
-npm install -g typescript
+npm install -g typescript ts-node ts-node-dev
 npm install
 ```
 
