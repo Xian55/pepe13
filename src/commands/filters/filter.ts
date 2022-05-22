@@ -1,11 +1,11 @@
 import { Command } from "../../structures/Command";
 import Schema from "../../schemas/filter";
 import { client } from "../..";
-import { ApplicationCommandOptionChoice } from "discord.js";
+import { ApplicationCommandOptionChoiceData } from "discord.js";
 
 const { chatFilter } = client;
 
-const handlerChoices: ApplicationCommandOptionChoice[] = [];
+const handlerChoices: ApplicationCommandOptionChoiceData[] = [];
 for (let element of chatFilter.filters) {
     let choice = { name: element[0], value: element[0] };
     handlerChoices.push(choice);

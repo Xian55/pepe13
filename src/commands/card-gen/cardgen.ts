@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoice } from "discord.js";
+import { ApplicationCommandOptionChoiceData } from "discord.js";
 import path from "path";
 import { loadImage, createCanvas } from "canvas"
 import { CanvasTextWrapper } from "canvas-text-wrapper"
@@ -11,7 +11,7 @@ const imgPath = "img";
 const templatePath = "template";
 const CardTypes = require(path.join(dataPath, typesFile));
 
-const typeChoices: ApplicationCommandOptionChoice[] = [];
+const typeChoices: ApplicationCommandOptionChoiceData[] = [];
 for (const key in CardTypes) {
     let choice = { name: key, value: key };
     typeChoices.push(choice);
