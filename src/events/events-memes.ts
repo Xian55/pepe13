@@ -11,12 +11,12 @@ const events = [
     new Event('messageReactionAdd', async (messageReaction, user) => {
         if (user.bot) return;
         if (!memeCoin || messageReaction.emoji.id !== memeCoin.id) return;
-        console.log(`${user} add reacted with ${memeCoin}`);
+        //console.log(`${user} add reacted with ${memeCoin}`);
     }),
     new Event('messageReactionRemove', async (messageReaction, user) => {
         if (user.bot) return;
         if (!memeCoin || messageReaction.emoji.id !== memeCoin.id) return;
-        console.log(`${user} remove reacted with ${memeCoin}`);
+        //console.log(`${user} remove reacted with ${memeCoin}`);
     })
 ];
 
