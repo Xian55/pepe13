@@ -18,7 +18,7 @@ export default [new Event('voiceStateUpdate',
 
         const { guild, id, channel, member } = newState
 
-        if (!hasPermission(guild.me, channel, botPermissions)) {
+        if (!hasPermission(guild.members.me, channel, botPermissions)) {
             logHandler.log("error", `Unable to join **${channel.name}** missing permission!`);
             return;
         }

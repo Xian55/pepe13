@@ -26,7 +26,7 @@ export default {
     async run({ message }: { message: Message }) {
         if (memeCoin && shouldReact(message)) {
             const { guild, channel } = message;
-            if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.ADD_REACTIONS])) {
+            if (!hasPermission(guild.members.me, channel as TextChannel, [Permissions.FLAGS.ADD_REACTIONS])) {
                 logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
                 return;
             }

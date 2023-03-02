@@ -25,7 +25,7 @@ export default {
 
         if (!shouldDelete) return;
 
-        if (!hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.MANAGE_MESSAGES])) {
+        if (!hasPermission(guild.members.me, channel as TextChannel, [Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.MANAGE_MESSAGES])) {
             logHandler.log("error", `${path.basename(__filename)} Dont have permission in ${channel}`);
             return;
         }

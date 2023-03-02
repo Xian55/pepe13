@@ -30,7 +30,7 @@ export default [new Event('interactionCreate', async (interaction) => {
                     ephemeral: true
                 });
 
-        if (channel.isText() && !hasPermission(guild.me, channel as TextChannel, command.botPermissions || [])) {
+        if (channel.isText() && !hasPermission(guild.members.me, channel as TextChannel, command.botPermissions || [])) {
             return await interaction.reply(
                 {
                     content: `Dont have all ${new Permissions(command.botPermissions).toArray()} permission(s) in ${channel}`,

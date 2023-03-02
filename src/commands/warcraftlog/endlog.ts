@@ -3,7 +3,7 @@ import { Command } from "../../structures/Command";
 import { hasPermission } from "../../utils/hasPermission";
 
 const ironforgeBaseURL = "https://ironforge.pro/analyzer/report/"
-const regexLog = /https:\/\/classic\.warcraftlogs\.com\/reports\/(.*)\//;
+const regexLog = /https:\/\/classic\.warcraftlogs\.com\/reports\/(.*)/;
 
 export default new Command({
     name: "endlog",
@@ -79,7 +79,7 @@ export default new Command({
         await interaction.reply({ embeds: embeds });
         await interaction.followUp({ content: "Original message will be deleted!", ephemeral: true });
 
-        if (hasPermission(guild.me, channel as TextChannel, [Permissions.FLAGS.MANAGE_MESSAGES])) {
+        if (hasPermission(guild.members.me, channel as TextChannel, [Permissions.FLAGS.MANAGE_MESSAGES])) {
             setTimeout(() => message.delete(), 4000);
         }
         else {
